@@ -2,26 +2,27 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { ShoppingCartIcon } from 'react-native-heroicons/outline';
-import { Button } from '@rneui/base';
 import { PlusIcon, MinusIcon } from 'react-native-heroicons/outline';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Controls } from '../../components/Controls';
 import { db, auth } from '../../../db/firebase';
+import { useTheme } from 'react-native-paper';
+import InteractionButton from '../../components/InteractionButton';
 
-function handleAddToCart(item, amount) {
+function handleAddToCart(item, amount, navigation) {
 
     let founded = false;
 
-    db.collection('users').doc(auth.currentUser.uid).collection('cart').where('id', '==', item.id).get().then((querySnapshot) => {
+    db.collection('Users').doc(auth.currentUser.uid).collection('Cart').where('id', '==', item.id).get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             founded = true;
-            db.collection('users').doc(auth.currentUser.uid).collection('cart').doc(doc.id).update({
+            db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(doc.id).update({
                 amount: doc.data().amount + amount
             })
         })
     }).then(() => {
         if (!founded) {
-            db.collection('users').doc(auth.currentUser.uid).collection('cart').add({
+            db.collection('Users').doc(auth.currentUser.uid).collection('Cart').add({
                 id: item.id,
                 name: item.name,
                 price: item.price,
@@ -30,55 +31,40 @@ function handleAddToCart(item, amount) {
             })
         }
     })
+
+    navigation.navigate("Home")
 }
 
 function Item({ route }) {
     const { item } = route.params;
     const [amount, setAmount] = useState(1);
     const navigation = useNavigation();
+    const theme = useTheme()
 
     return (
-        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-            <Controls item={item}/>
-            <ScrollView
-                contentContainerStyle={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                    marginTop: -30,
-                }}>
-                <View style={styles.imageContainer}>
-                    <Image source={item.image} style={styles.image} />
-                </View>
-                <View style={styles.textContainer}>
+        <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: 'lightgray', }}>
+            <Controls item={item} />
+            <View style={styles.imageContainer}>
+                <Image source={item.image} style={styles.image} />
+            </View>
+            <View style={styles.textContainer}>
+                <View style={styles.nameAndPriceContainer}>
                     <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>${item.price}</Text>
+                    <Text style={{ fontSize: 25, color: theme.colors.primary }}>${item.price}</Text>
                 </View>
-            </ScrollView>
-            <View style={styles.addToCartContainer}>
-                <View style={styles.amountAndTotal}>
-                    <View style={styles.amountContainer}>
-                        <TouchableOpacity style={styles.amountIcon} onPress={() => setAmount(Math.max(1, amount - 1))}>
-                            <MinusIcon style={styles.icon} />
-                        </TouchableOpacity>
-                        <Text style={styles.amount}>{amount}</Text>
-                        <TouchableOpacity style={styles.amountIcon} onPress={() => setAmount(amount + 1)}>
-                            <PlusIcon style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.total}>
-                        Total: ${(item.price * amount).toFixed(2)}
+                <View style={styles.descriptionContainer}>
+                    <Text style={styles.description}>
+                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     </Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {
-                    handleAddToCart(item, amount)
-                    navigation.navigate('Home')
-                }}>
-                    <ShoppingCartIcon style={styles.icon} />
-                    <Text style={styles.buttonText}>Add to Cart</Text>
-                </TouchableOpacity>
+                <View style={styles.amountAndTotal}>
+                    <ManageAmount setAmount={setAmount} amount={amount}/>
+                    <View style={styles.totalContainer}>
+                        <Text style={styles.text}>Total: ${(item.price * amount).toFixed(2)}</Text>
+                    </View>
+                </View>
+                <InteractionButton text="Agregar al Carrito" background={theme.colors.primary} color="#fff" onPress={() => handleAddToCart(item, amount, navigation)} />
             </View>
         </SafeAreaView>
     )
@@ -86,96 +72,97 @@ function Item({ route }) {
 
 export default Item
 
+export const ManageAmount = (props) => {
+    const theme = useTheme()
+
+    const handleIncreaseAmount = () => {
+        props.setAmount(props.amount + 1)
+        props.updateAmount
+    }
+
+    const handleDecreaseAmount = () => {
+        props.setAmount(Math.max(props.amount - 1, 1))
+        props.updateAmount
+    }
+
+    return (
+        <View style={styles.amountContainer}>
+            <TouchableOpacity style={styles.amountIcon} onPress={() => handleDecreaseAmount()}>
+                <MinusIcon style={{ color: theme.colors.secondary }} />
+            </TouchableOpacity>
+            <Text style={styles.text}>{props.amount}</Text>
+            <TouchableOpacity style={styles.amountIcon} onPress={() => handleIncreaseAmount()}>
+                <PlusIcon style={{ color: theme.colors.secondary }} />
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-    },
-    image: {
-        width: 350,
-        height: 350,
-        resizeMode: 'contain',
-        backgroundColor: 'red',
+    imageContainer: {
+        width: '100%',
+        height: '50%',
+        zIndex: -1,
+
+        marginTop: -70,
     },
     textContainer: {
+        height: '50%',
+        backgroundColor: 'white',
+        borderRadius: 60,
+    },
+    nameAndPriceContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 20,
-        width: '90%',
+        padding: 30,
     },
     name: {
         fontSize: 30,
         fontWeight: 'bold',
     },
-    price: {
-        fontSize: 25,
-        color: '#007AFF',
-    },
-    addToCartContainer: {
+    descriptionContainer: {
         display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    description: {
+        fontSize: 15,
+        color: 'gray',
     },
     amountAndTotal: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
-        margin: 15,
-        borderRadius: 10,
+        padding: 20,
     },
     amountContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: '30%',
     },
     amountIcon: {
-        width: 30,
-        height: 30,
-        backgroundColor: '#007AFF',
-        borderRadius: '100%',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    amount: {
-        fontSize: 18,
+    text: {
+        fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: 10,
-        marginRight: 10,
     },
-    total: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-    },
-    button: {
+    totalContainer: {
         display: 'flex',
-        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#007AFF',
-        borderRadius: 10,
-        marginBottom: 40,
-        marginHorizontal: 15,
-    },
-    icon: {
-        width: 20,
-        height: 20,
-        color: 'white',
-    },
-    buttonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-        color: 'white',
     },
 })
+

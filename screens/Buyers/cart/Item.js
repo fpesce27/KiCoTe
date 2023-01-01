@@ -2,99 +2,82 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { TrashIcon } from 'react-native-heroicons/outline';
 import { db, auth } from '../../../db/firebase';
+import { ManageAmount } from '../home/ItemScreen';
+import { useTheme } from 'react-native-paper';
 
 function removeItem(id) {
-    db.collection('users').doc(auth.currentUser.uid).collection('cart').doc(id).delete();
+  db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(id).delete();
 }
 
 const Item = (props) => {
 
-    const {id, cartItem} = props;
+  const { id, cartItem } = props;
+  const [amount, setAmount] = React.useState(cartItem.amount);
+  const theme = useTheme();
 
-    return (
-        <View key={id} style={styles.cartItem}>
-            <View style={styles.cartItemLeft}>
-                <Image source={cartItem.image} style={styles.image} />
-                <View style={styles.textContainer} className='space-y-3'>
-                    <Text style={styles.name}>{cartItem.name}</Text>
-                    <Text style={styles.price}>
-                        $ {(cartItem.price * cartItem.amount).toFixed(2)}
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.cartItemRight}>
-                <Text style={styles.quantity}>{cartItem.amount}</Text>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={() => removeItem(id)}>
-                <TrashIcon style={styles.buttonText} />
-            </TouchableOpacity>
-                
+  const updateAmount = () => {
+    db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(id).update({
+      amount: amount,
+    })
+  }
+
+  return (
+    <View key={id} style={styles.cartItem}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: cartItem.image }} />
+      </View>
+      <View style={styles.dataContainer}>
+        <Text style={{fontFamily:theme.fonts.regular, fontSize:20}}>{cartItem.name}</Text>
+        <Text style={{color:theme.colors.primary, fontSize:15}}>${(cartItem.price * amount).toFixed(2)}</Text>
+      </View>
+      <View style={styles.controls}>
+        <View>
+          <ManageAmount item={cartItem} amount={amount} setAmount={setAmount} updateAmount={updateAmount()} />
         </View>
-    )
+        <TouchableOpacity style={{padding:10}} onPress={() => removeItem(id)}>
+          <TrashIcon style={{color:theme.colors.secondary}}/>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 }
 
 export default Item
 
 const styles = StyleSheet.create({
-    cartItem: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        margin: 15,
-        backgroundColor: 'white',
-        borderRadius: 10,
-      },
-      cartItemLeft: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      textContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        padding: 10,
-      },
-      image: {
-        width: 100,
-        height: 100,
-        resizeMode: 'contain',
-      },
-      name: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-      },
-      price: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-        color: '#007AFF',
-      },
-      cartItemRight: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      quantity: {
-        fontSize: 18,
-        fontWeight: 'bold',
-      },
-      button: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-        margin: 15,
-        backgroundColor: '#007AFF',
-        borderRadius: 10,
-      },
-      buttonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-      },
+  cartItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 35,
+    shadowOffset:{
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  imageContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 100,
+    overflow: 'hidden',
+    backgroundColor: 'red',
+  },
+  dataContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 10,
+  },
+  controls: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 })

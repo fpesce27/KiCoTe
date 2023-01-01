@@ -3,23 +3,17 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../../db/firebase'
+import InteractionButton from '../components/InteractionButton'
+import { useTheme } from 'react-native-paper'
+import { BackButton } from '../components/Controls'
 
 const StartingPage = (props) => {
 
-    const [role, setRole] = React.useState('')
-
     const navigation = useNavigation()
+    const theme = useTheme()
     
     const handleRole = (role) => {
-        db.collection(role).doc(auth.currentUser.uid).set({
-            username: auth.currentUser.displayName,
-            email: auth.currentUser.email,
-            password: props.route.params.password,
-            createdAt: new Date().getTime(),
-            uid: auth.currentUser.uid,
-            role: role,
-        })
-        navigation.navigate('Home')
+        navigation.navigate('Register', { role: role })
     }
 
     return (
@@ -29,19 +23,16 @@ const StartingPage = (props) => {
                 justifyContent: 'center',
                 height: '95%',
             }}
-        >
-            <View style={styles.title}>
-                <Text style={styles.titleText}>Let's Get Started</Text>
-                <Text style={styles.subtitle}>What Are You Going To Do In The App?</Text>
-            </View>
+        >   
+            <View style={{flex:1}}><BackButton /></View>
+            <View style={{flex:3}}>
+                <View style={styles.title}>
+                    <Text style={styles.titleText}>Vamos a Comenzar</Text>
+                    <Text style={styles.subtitle}>¿Qué vas a hacer en la app?</Text>
+                </View>
 
-            <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => handleRole('Buyers')}>
-                    <Text style={styles.buttonText}>Buy</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => handleRole('Sellers')}>
-                    <Text style={styles.buttonText}>Sell</Text>
-                </TouchableOpacity>
+                <InteractionButton text="Comprar" background={theme.colors.primary} color="#fff" onPress={() => handleRole('Buyers')} />
+                <InteractionButton text="Vender" background="#fff" color={theme.colors.primary} onPress={() => handleRole('Sellers')} /> 
             </View>
         </SafeAreaView>
     )
@@ -64,7 +55,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 15,
         fontWeight: 'normal',
-        color: '#9E9E9E',
+        opacity: 0.5,
     },
     inputContainer: {
         display: 'flex',

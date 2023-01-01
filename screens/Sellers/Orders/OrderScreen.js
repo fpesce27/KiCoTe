@@ -1,86 +1,63 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemCard from './ItemCard'
-import { ScrollView } from 'react-native'
 import { BackButton } from '../../components/Controls'
-import { db } from '../../../db/firebase' 
-import BottomSheet from '@gorhom/bottom-sheet';
-import { Modal } from 'react-native-paper'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import BottomSheetCancel from './BottomSheetCancel'
+import BottomSheetConfirm from './BottomSheetConfirm'
 
 const OrderScreen = ({ route }) => {
-    
+
     const { userId, name, order } = route.params
-    const [cancelled, setCancelled] = React.useState(false)
-
-    const bottomSheetRef = React.useRef(null);
-
-    const handleCompleted = () => {
-        db.collection('Buyers').doc(userId).collection('orders').doc(order.id).update({
-            status: 'completed'
-        })
-    }
-
-    const handleCancel = () => {
-        /* db.collection('Buyers').doc(userId).collection('orders').doc(order.id).update({
-            status: 'cancelled'
-        }) */
-        setCancelled(true)
-    }
-
+    const bottomSheetConfirm = React.useRef(null);
+    const bottomSheetCancel = React.useRef(null);
+    
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.dataContainer}>
-                <BackButton />
-                <View style={{marginTop:-50}}>
-                    <View style={styles.title}>
-                        <Text style={styles.text}>Orden de {/* {name} */} Fpesce27</Text>
-                    </View>
+        <BottomSheetModalProvider>
+            <SafeAreaView style={styles.container}>
 
-                    <ScrollView style={{ height: '50%' }}>
-                        <View style={styles.items}>
-                            {order.items.map((item, index) => (
-                                <ItemCard key={index} item={item} />
-                            ))}
+                <View style={styles.dataContainer}>
+                    <BackButton />
+                    <View style={{ marginTop: -50 }}>
+                        <View style={styles.title}>
+                            <Text style={styles.text}>Orden de {name}</Text>
                         </View>
-                    </ScrollView>
-                </View>
-            </View>
-            <View style={styles.bottomContainer}>
-                <View style={styles.summaryContainer}>
-                    <View style={styles.totalContainer}>
-                        <Text style={styles.summaryText}>Total</Text>
-                    </View>
-                    <View style={styles.priceContainer}>
-                        <Text style={styles.summaryText}>{order.total}</Text>
-                    </View>
-                </View>
-                <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.button} onPress={handleCancel}>
-                        <Text style={styles.buttonText}>Cancelar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#007AFF' }} onPress={handleCompleted}>
-                        <Text style={styles.buttonText}>Completado</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
 
-            <Modal visible={cancelled} onDismiss={() => setCancelled(false)}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modal}>
-                        <Text style={styles.modalText}>¿Estás seguro de que quieres cancelar la orden?</Text>
-                        <View style={styles.modalButtons}>
-                            <TouchableOpacity style={styles.modalButton} onPress={() => setCancelled(false)}>
-                                <Text style={styles.modalButtonText}>No</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ ...styles.modalButton, backgroundColor: '#007AFF' }} onPress={handleCancel}>
-                                <Text style={styles.modalButtonText}>Sí</Text>
-                            </TouchableOpacity>
+                        <ScrollView style={{ height: '50%' }}>
+                            <View style={styles.items}>
+                                {order.items.map((item, index) => (
+                                    <ItemCard key={index} item={item} />
+                                ))}
+                            </View>
+                        </ScrollView>
+                    </View>
+                </View>
+
+                <View style={styles.bottomContainer}>
+                    <View style={styles.summaryContainer}>
+                        <View style={styles.totalContainer}>
+                            <Text style={styles.summaryText}>Total</Text>
+                        </View>
+                        <View style={styles.priceContainer}>
+                            <Text style={styles.summaryText}>{order.total}</Text>
                         </View>
                     </View>
+                    <View style={styles.buttons}>
+                        <TouchableOpacity style={styles.button} onPress={() => bottomSheetCancel.current?.present()}>
+                            <Text style={styles.buttonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ ...styles.button, backgroundColor: '#007AFF' }} onPress={() => bottomSheetConfirm.current?.present()}>
+                            <Text style={styles.buttonText}>Completado</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </Modal>
-        </SafeAreaView>
+
+                <BottomSheetCancel order={order} userId={userId} bottomSheetCancel={bottomSheetCancel} />
+                <BottomSheetConfirm order={order} userId={userId} bottomSheetConfirm={bottomSheetConfirm} />
+
+            </SafeAreaView>
+        </BottomSheetModalProvider>
     )
 }
 

@@ -1,36 +1,35 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from 'react-native-paper';
+import { db, auth } from '../../../db/firebase';
 
 const Summary = (props) => {
+    const theme = useTheme()
+    const [total, setTotal] = React.useState(props.total)
 
-    const navigation = useNavigation();
-
-    const checkout = () => {
-        if (props.items.length > 0) {
-            navigation.navigate('Checkout', { items: props.items })
-        }
-        else {
-            alert('Your cart is empty!')
-        }
-    }
+    React.useCallback(() => {
+        let total = 0;
+        props.items.forEach(item => {
+            total += item.cartItems.price * item.cartItems.amount
+        });
+        setTotal(total)
+    }, [props.total])
 
     return (
         <View style={styles.container}>
-            <View style={styles.summaryContainer}>
-                <View style={styles.totalContainer}>
-                    <Text style={styles.total}>Total</Text>
-                </View>
-                <View style={styles.priceContainer}>
-                    <Text style={styles.price}>${
-                        props.items.reduce((total, item) => total + (item.cartItem.price * item.cartItem.amount), 0).toFixed(2)
-                    }</Text>
-                </View>
+            <View style={styles.itemsTotal}>
+                <Text style={{color:'gray'}}>Items ({props.items.length})</Text>
+                <Text style={{color:'gray'}}>${props.total.toFixed(2)}</Text>
             </View>
-
-            <TouchableOpacity style={styles.button} onPress={checkout}>
-                <Text style={styles.buttonText}>Proceed to checkout</Text>
-            </TouchableOpacity>
+            <View style={styles.itemsTotal}>
+                <Text style={{color:'gray'}}>Descuento</Text>
+                <Text style={{color:'gray'}}>${props.discount}</Text>
+            </View>
+            <View style={{...styles.itemsTotal, borderTopWidth: 1, borderTopColor: '#000'}}>
+                <Text style={{fontFamily:theme.fonts.regular, fontSize:20}}>Total</Text>
+                <Text style={{fontFamily:theme.fonts.regular, fontSize:20, color:theme.colors.primary}}>${(props.total - props.discount).toFixed(2)}</Text>
+            </View>
         </View>
     )
 }
@@ -39,53 +38,26 @@ export default Summary
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 35,
+    shadowOffset:{
+      width: 0,
+      height: 2,
     },
-    summaryContainer: {
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    },
+    itemsTotal: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        width: '100%',
         padding: 10,
-        margin: 15,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        width: '90%',
-    },
-    totalContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-    },
-    total: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    priceContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-    },
-    price: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    button: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#007AFF',
-        padding: 10,
-        borderRadius: 15,
-        width: '90%',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
+    }
 })

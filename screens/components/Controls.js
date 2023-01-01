@@ -5,20 +5,12 @@ import { ArrowLeftIcon, HeartIcon } from 'react-native-heroicons/outline';
 import { HeartIcon as HeartIconSolid } from 'react-native-heroicons/solid';
 import { db, auth } from '../../db/firebase';
 
-export function Controls(props) {
-
-    const navigation = useNavigation();
-    const [isFavourite, setFavourite] = useState(false);    
+export function Controls(props) {   
     
     return (
-        <View style={styles.controls}>
+        <View style={styles.controlsContainer}>
             <BackButton /> 
-            <TouchableOpacity style={styles.backButton} onPress={() => {
-                handleFavs(props.item);
-                setFavourite(!isFavourite);
-            }}>
-                {isFavourite ? <HeartIconSolid style={{ ...styles.icon, color: 'lightgreen' }} /> : <HeartIcon style={styles.icon} />}
-            </TouchableOpacity>
+            <HeartButton item={props.item}/>
         </View>
     )
 }
@@ -28,8 +20,23 @@ export function BackButton() {
     return (
         <View style={styles.controls}>
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <ArrowLeftIcon style={styles.icon} />
-                </TouchableOpacity>
+                <ArrowLeftIcon style={styles.icon} />
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+export function HeartButton(props) {
+    const [isFavourite, setFavourite] = useState(false);
+
+    return (
+        <View style={styles.controls}>
+            <TouchableOpacity style={styles.backButton} onPress={() => {
+                handleFavs(props.item);
+                setFavourite(!isFavourite);
+            }}>
+                {isFavourite ? <HeartIconSolid style={{ ...styles.icon, color: 'lightgreen' }} /> : <HeartIcon style={styles.icon} />}
+            </TouchableOpacity>
         </View>
     )
 }
@@ -52,13 +59,14 @@ function handleFavs(item) {
 }
 
 const styles = StyleSheet.create({
-    controls: {
+    controlsContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    controls: {
         padding: 20,
-        zIndex: 100,
     },
     backButton: {
         display: 'flex',
@@ -68,6 +76,12 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 100,
         backgroundColor: 'white',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4.65,
     },
     icon: {
         width: 20,

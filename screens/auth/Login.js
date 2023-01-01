@@ -1,16 +1,19 @@
 import { Text, View, StyleSheet, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Input, Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../db/firebase'
+import { useTheme, TextInput } from 'react-native-paper'
+import { BackButton } from '../components/Controls'
+import InteractionButton from '../components/InteractionButton'
 
 const Login = () => {
   
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const navigation = useNavigation()
+  const theme = useTheme()
 
   const onLoginPressed = () => {
     auth.signInWithEmailAndPassword(email.value, password.value).catch((error) => alert(error.message))
@@ -18,6 +21,7 @@ const Login = () => {
 
   return (
     <SafeAreaView>
+      <View style={{flex:1, zIndex:100}}><BackButton /></View>
       <KeyboardAvoidingView
         behavior="padding"
         style={{
@@ -26,7 +30,164 @@ const Login = () => {
           height: '95%',
         }}>
         <StatusBar style="auto" />
-        <View style={styles.title}>
+        <View style={styles.titleContainer}>
+          <Text style={{...styles.title, fontFamily:theme.fonts.regular}}>Iniciar Sesión</Text>
+          <Text style={{...styles.subtitle, fontFamily:theme.fonts.regular}}>Ingresa tus datos para iniciar sesión</Text>
+        </View>
+        
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={email.value}
+            onChangeText={(text) => setEmail({ value: text, error: '' })}
+            placeholder="Ingresa Tu Email" 
+            style={{fontFamily:theme.fonts.regular, fontSize: 20}}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={password.value}
+            onChangeText={(text) => setPassword({ value: text, error: '' })}
+            placeholder="****************"
+            secureTextEntry={true}
+            style={{fontFamily:theme.fonts.regular, fontSize: 20}} 
+          />
+        </View>
+        
+        <View style={styles.forgotPasswordContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+            <Text style={{fontFamily:theme.fonts.regular}}>¿Olvidaste la contraseña?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <InteractionButton text="Iniciar Sesión" background={theme.colors.primary} color="#fff" onPress={onLoginPressed} />
+
+        <InteractionButton text="Crear Cuenta" background="#fff" color={theme.colors.primary} onPress={() => navigation.navigate('StartingPage')} />
+
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  )
+}
+
+export default Login
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    display: 'flex',
+    padding: 10,
+    margin: 15,
+  },
+  title: {
+    fontSize: 36,
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 18,
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  inputContainer:{
+    margin: 15,
+    backgroundColor: '#FFFFFF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4.65,
+    borderRadius: 24,
+  },
+  button: {
+    width: '100%',
+    height: 58,
+    borderRadius: 24,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
+  forgotPasswordContainer: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    margin: 15,
+    marginRight: 20,
+  },
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* <View style={styles.title}>
           <Text style={styles.titleText}>Welcome Back</Text>
           <Text style={styles.subtitle}>Welcome Back! Please Enter Your Details.</Text>
         </View>
@@ -72,14 +233,7 @@ const Login = () => {
           <TouchableOpacity onPress={() => navigation.replace('Register')}>
             <Text style={styles.signupText}>Sign Up For Free</Text>
           </TouchableOpacity>
-        </View>
-
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  )
-}
-
-export default Login
+        </View> 
 
 const styles = StyleSheet.create({
   title: {
@@ -146,4 +300,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 5,
   },
-})
+}) */}

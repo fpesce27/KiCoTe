@@ -5,33 +5,68 @@ export const items = [
         id: 1,
         name: 'Apple',
         price: 1.99,
-        image: '..../assets/icon.png'
+        image: '..../assets/icon.png',
+        categories: ['Fruits', 'Breakfast']
     },
     {
         id: 2,
-        name: 'Banana',
+        name: 'Toast',
         price: 2.99,
-        image: '..../assets/icon.png'
+        image: '..../assets/icon.png',
+        categories: ['Breakfast']
     },
     {
         id: 3,
-        name: 'Orange',
+        name: 'Coca Cola',
         price: 3.99,
-        image: '..../assets/icon.png'
+        image: '..../assets/icon.png',
+        categories: ['Drinks']
     },
     {
         id: 4,
-        name: 'Pineapple',
+        name: 'Kinder',
         price: 4.99,
-        image: '..../assets/icon.png'
+        image: '..../assets/icon.png',
+        categories: ['Snacks']
     },
     {
         id: 5,
-        name: 'Strawberry',
+        name: 'Hamburger',
         price: 5.99,
-        image: '..../assets/icon.png'
+        image: '..../assets/icon.png',
+        categories: ['Lunch']
+    },
+    {
+        id: 6,
+        name: 'Banana',
+        price: 6.99,
+        image: '..../assets/icon.png',
+        categories: ['Fruits']
+    },
+    {
+        id: 7,
+        name: 'Orange',
+        price: 7.99,
+        image: '..../assets/icon.png',
+        categories: ['Fruits']
+    },
+    {
+        id: 8,
+        name: 'Pineapple',
+        price: 8.99,
+        image: '..../assets/icon.png',
+        categories: ['Fruits']
+    },
+    {
+        id: 9,
+        name: 'Blueberry',
+        price: 9.99,
+        image: '..../assets/icon.png',
+        categories: ['Fruits']
     },
 ]
+
+export const categories = ['Fruits', 'Breakfast', 'Drinks', 'Snacks', 'Lunch'];
 
 export const orders = [
     {

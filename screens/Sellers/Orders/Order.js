@@ -19,12 +19,12 @@ const Order = (props) => {
     return (
     <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('OrderScreen', {order: props.order, name: name, userId: props.order.userId})}>
         <View style={styles.orderTop}>
-            <Text style={styles.orderName}>{/* {name} */}Fpesce27</Text>
+            <Text style={styles.orderName}>{name}</Text>
             <Text style={props.order.status === 'Pending' ? styles.orderStatus : props.order.status === 'Cancelled' ? [styles.orderStatus, {color: 'red'}] : [styles.orderStatus, {color: 'green'}]}>{props.order.status}</Text>
         </View>
         
         <View style={styles.orderBottom}>
-            <Image style={styles.orderImage} /* source={{uri: image}} */ source={require('../../../assets/icon.png')} />
+            <Image style={styles.orderImage} source={{uri: image}} />
             <Text style={styles.orderItems}>Items: {props.order.items.length}</Text>
             <Text style={styles.orderTotal}>${props.order.total}</Text>
         </View>

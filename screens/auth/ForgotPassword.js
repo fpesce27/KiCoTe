@@ -1,17 +1,18 @@
 import { Text, View, StyleSheet, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Input, Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../db/firebase'
 import { BackButton } from '../components/Controls'
+import { useTheme, TextInput } from 'react-native-paper'
 
 
 const ForgotPassword = () => {
   
     const [email, setEmail] = useState({ value: '', error: '' })
     const navigation = useNavigation()
+    const theme = useTheme()
 
     const forgotPassword = () => {
         auth.sendPasswordResetEmail(email.value).then(() => {
@@ -24,42 +25,37 @@ const ForgotPassword = () => {
 
     return (
     <SafeAreaView>
-        <View style={styles.backBtn}><BackButton /></View>
         <KeyboardAvoidingView
             behavior="padding"
             style={{
                 display: 'flex',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
                 height: '95%',
             }}>
             <StatusBar style="auto" />
-            <View style={styles.title}>
-                <Text style={styles.titleText}>Forgot Password</Text>
-                <Text style={styles.subtitle}>Please Enter Your Email.</Text>
+            <BackButton />
+            <View>
+                <View style={styles.titleContainer}>
+                    <Text style={{...styles.title, fontFamily:theme.fonts.regular}}>Recuperar Contraseña</Text>
+                    <Text style={{...styles.subtitle, fontFamily:theme.fonts.regular}}>Ingresa tu email para recuperar tu contraseña</Text>
+                </View>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        value={email.value}
+                        onChangeText={(text) => setEmail({ value: text, error: '' })}
+                        placeholder="Ingresa Tu Email"
+                        style={{fontFamily:theme.fonts.regular, fontSize: 20}}
+                    />
+                </View>
             </View>
+
 
             <View style={styles.inputContainer}>
-                <Input
-                    placeholder="Enter Your Email"
-                    style={styles.input}
-                    label="Email"
-                    labelStyle={{color:'#000'}}
-                    returnKeyType="next"
-                    value={email.value}
-                    onChangeText={(text) => setEmail({ value: text, error: '' })}
-                    autoCapitalize="none"
-                    autoCompleteType="email"
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
-                />
-                <Text style={styles.forgotPasswordText}>You will receive email with password reset link.</Text>
-            </View>
-
-            <View style={styles.forgotPassword}>
-                <TouchableOpacity style={styles.button} onPress={forgotPassword}>
-                    <Text style={styles.buttonText}>Send Email</Text>
+                <TouchableOpacity onPress={() => forgotPassword()} style={{...styles.button, backgroundColor: theme.colors.primary}}>
+                    <Text style={styles.buttonText}>Recuperar Contraseña</Text>
                 </TouchableOpacity>
             </View>
+
         </KeyboardAvoidingView>
     </SafeAreaView>
   )
@@ -68,65 +64,46 @@ const ForgotPassword = () => {
 export default ForgotPassword
 
 const styles = StyleSheet.create({
-    backBtn: {
+    titleContainer: {
         display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        position: 'absolute',
-        top: 50,
-        left: 20,
-        zIndex: 1,
-    },
-    title: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
         padding: 10,
         margin: 15,
-    },
-    titleText: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#000',
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 15,
-        color: '#000',
-    },
-    inputContainer: {
+      },
+      title: {
+        fontSize: 36,
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        marginBottom: 20,
-    },
-    input: {
-        marginBottom: 10,
-        marginLeft: 12,
-    },
-    button: {
-        backgroundColor: '#007AFF',
-        padding: 10,
-        borderRadius: 5,
-        width: '95%',
-        display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
+        textAlign: 'center',
+      },
+      subtitle: {
+        fontSize: 18,
+        display: 'flex',
+        alignItems: 'center',
+        textAlign: 'center',
+        marginTop: 10,
+      },
+      inputContainer:{
+        margin: 15,
+        backgroundColor: '#FFFFFF',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4.65,
+        borderRadius: 24,
+      },
+      button: {
+        width: '100%',
+        height: 58,
+        borderRadius: 24,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      buttonText: {
         fontSize: 20,
-        fontWeight: 'bold',
-    },
-    forgotPassword: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    forgotPasswordText: {
-        color: '#000',
-        fontSize: 15,
-        marginLeft: 12,
-    },
+        color: '#FFFFFF',
+      },
+
 })

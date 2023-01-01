@@ -6,7 +6,6 @@ import Body from './Body';
 const Home = (props) => {
 
     const [searchPhrase, setSearchPhrase] = React.useState('');
-    //const role = useContext(RoleContext)
 
     return (
         <SafeAreaView>

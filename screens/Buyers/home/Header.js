@@ -3,9 +3,12 @@ import React from 'react'
 import { BellAlertIcon } from 'react-native-heroicons/outline';
 import { auth } from '../../../db/firebase';
 import { SearchBar } from './SearchBar';
+import { useTheme } from 'react-native-paper';
 
 const Header = (props) => {
   
+  const theme = useTheme()
+
   return (
     <View style={styles.container}>
 
@@ -13,7 +16,7 @@ const Header = (props) => {
         <View style={styles.headerLeft}>
           <Image
             style={styles.logo}
-            source={auth.currentUser.photoURL ? { uri: auth.currentUser.photoURL } : require('../../../assets/icon.png')}
+            source={{uri: auth.currentUser.photoURL}}
           />
           <View className='flex-col space-y-2'>
             <Text style={styles.headerText}>Welcome, </Text>
@@ -21,7 +24,7 @@ const Header = (props) => {
           </View>
         </View>
         <View className='bg-white rounded-full w-12 h-12 items-center justify-center'>
-          <BellAlertIcon />
+          <BellAlertIcon color={theme.colors.primary}/>
         </View>
       </View>
 
