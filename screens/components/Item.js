@@ -9,7 +9,6 @@ const Item = (props) => {
     const navigation = useNavigation();
     const theme = useTheme();
 
-
     return (
             <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate('Item', {item: item})}>
                 <Image
@@ -18,7 +17,7 @@ const Item = (props) => {
                 />
                 <View style={styles.itemText}>
                     <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={{...styles.itemPrice, color:theme.colors.primary}}>${item.price}</Text>
+                    <Text style={{...styles.itemPrice, color:theme.colors.accent}}>${item.price}</Text>
                 </View>
             </TouchableOpacity>
     )
@@ -33,7 +32,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 20,
         display: 'flex',
-        flexDirection: 'column',
     },
     itemText: {
         display: 'flex',

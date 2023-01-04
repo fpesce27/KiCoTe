@@ -8,18 +8,22 @@ import InteractionButton from '../../components/InteractionButton';
 import { useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
+
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const theme = useTheme()
   const navigation = useNavigation();
 
   const handleCheckout = () => {
-    if (cartItems.length > 0) {
-      navigation.navigate('Checkout', { cartItems: cartItems })
-    }
-    else {
-      alert('No hay productos en el carrito')
-    }
+    db.collection('Schools').doc(theme.data.schoolId).collection('Users').doc(auth.currentUser.uid).collection('Orders').add({
+      items: cartItems,
+      total: cartItems.reduce((acc, item) => acc + item.cartItem.price * item.cartItem.amount, 0),
+      status: 'Pending',
+      date: new Date(),
+      userId: auth.currentUser.uid,
+    }).then(() => {
+      clearCart();
+    })
   }
 
   const clearCart = () => {
@@ -44,7 +48,7 @@ function Cart() {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <View style={styles.title}>
         <Text style={styles.titleText}>Tu Orden</Text>
       </View>
@@ -54,7 +58,7 @@ function Cart() {
         ))}
       </ScrollView>
       <Summary items={cartItems} clearCart={clearCart} discount={0} total={cartItems.reduce((acc, item) => acc + item.cartItem.price * item.cartItem.amount, 0)} />
-      <InteractionButton text="Confirmar Orden" background={theme.colors.primary} color='#fff' onPress={handleCheckout} />
+      <InteractionButton text="Confirmar Orden" onPress={handleCheckout} />
     </SafeAreaView>
   )
 }

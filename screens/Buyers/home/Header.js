@@ -1,34 +1,52 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { BellAlertIcon } from 'react-native-heroicons/outline';
+import { MagnifyingGlassIcon, BellAlertIcon, AdjustmentsHorizontalIcon } from 'react-native-heroicons/outline';
 import { auth } from '../../../db/firebase';
-import { SearchBar } from './SearchBar';
 import { useTheme } from 'react-native-paper';
+import SearchBar from './SearchBar';
 
 const Header = (props) => {
-  
+
   const theme = useTheme()
 
   return (
-    <View style={styles.container}>
+    <View>
 
-      <View style={styles.header}>
+      <View style={styles.headerTop}>
+
         <View style={styles.headerLeft}>
+
           <Image
             style={styles.logo}
-            source={{uri: auth.currentUser.photoURL}}
+            source={{ uri: auth.currentUser.photoURL }}
           />
+
           <View className='flex-col space-y-2'>
-            <Text style={styles.headerText}>Welcome, </Text>
+            <Text style={styles.headerText}>Bienvenido, </Text>
             <Text style={styles.textName}>{auth.currentUser.displayName}</Text>
           </View>
+
         </View>
-        <View className='bg-white rounded-full w-12 h-12 items-center justify-center'>
-          <BellAlertIcon color={theme.colors.primary}/>
+
+        <View className='flex-row space-x-4'>
+
+          <TouchableOpacity style={{...styles.icon, backgroundColor:'#fff'}}>
+            <BellAlertIcon color={theme.colors.accent} />
+          </TouchableOpacity>
+
         </View>
+
       </View>
 
-      <SearchBar searchPhrase={props.searchPhrase} setSearchPhrase={props.setSearchPhrase}/>
+      <View style={{ padding: 20, flexDirection: 'row' }}>
+
+          <SearchBar searchPhrase={props.searchPhrase} setSearchPhrase={props.setSearchPhrase} />
+
+          <TouchableOpacity onPress={() => props.bottomSheetFilter.current?.present()} style={{ ...styles.icon,backgroundColor: theme.colors.accent }}>
+            <AdjustmentsHorizontalIcon style={{ color: theme.colors.primary }} />
+          </TouchableOpacity>
+
+      </View>
 
     </View>
   )
@@ -37,10 +55,7 @@ const Header = (props) => {
 export default Header
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  header: {
+  headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -66,5 +81,13 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     fontSize: 20,
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
   },
 })

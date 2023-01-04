@@ -21,9 +21,7 @@ const OrdersHistory = () => {
 
     return (
     <SafeAreaView>
-        <View style={styles.BackButton}>
-            <BackButton/>
-        </View>
+        <BackButton/>
         <View style={styles.titleContainer}>
             <Text style={styles.title}>Orders History</Text>
         </View>
@@ -41,13 +39,6 @@ const OrdersHistory = () => {
 export default OrdersHistory
 
 const styles = StyleSheet.create({
-    BackButton: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        padding: 10,
-        margin: 15,
-    },
     titleContainer: {
         display: 'flex',
         alignItems: 'center',

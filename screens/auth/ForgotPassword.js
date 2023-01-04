@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../db/firebase'
 import { BackButton } from '../components/Controls'
 import { useTheme, TextInput } from 'react-native-paper'
+import InteractionButton from '../components/InteractionButton'
 
 
 const ForgotPassword = () => {
@@ -50,11 +51,7 @@ const ForgotPassword = () => {
             </View>
 
 
-            <View style={styles.inputContainer}>
-                <TouchableOpacity onPress={() => forgotPassword()} style={{...styles.button, backgroundColor: theme.colors.primary}}>
-                    <Text style={styles.buttonText}>Recuperar Contraseña</Text>
-                </TouchableOpacity>
-            </View>
+            <InteractionButton text="Recuperar Contraseña" onPress={forgotPassword} />
 
         </KeyboardAvoidingView>
     </SafeAreaView>

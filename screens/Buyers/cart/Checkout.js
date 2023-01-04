@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { WebView } from 'react-native-webview'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../../db/firebase'
@@ -44,16 +43,12 @@ const Checkout = ({route}) => {
     return (
         <>
             <StatusBar style="auto" hidden={true} />
-            <WebView 
-                source={{ uri: url }} 
-                originWhitelist={['*']}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                startInLoadingState={true}
-                scalesPageToFit={true}
-                style={{ marginTop :20 }}
-
-            />
+            <SafeAreaView>
+                <View>
+                    <Text>Checkout</Text>
+                    <Text>{url}</Text>
+                </View>
+            </SafeAreaView>
         </>
     )
 }

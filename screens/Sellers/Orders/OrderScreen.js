@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemCard from './ItemCard'
@@ -9,28 +9,29 @@ import BottomSheetConfirm from './BottomSheetConfirm'
 
 const OrderScreen = ({ route }) => {
 
-    const { userId, name, order } = route.params
+    const { userId, name, order, orderId } = route.params
     const bottomSheetConfirm = React.useRef(null);
     const bottomSheetCancel = React.useRef(null);
-    
+
     return (
         <BottomSheetModalProvider>
             <SafeAreaView style={styles.container}>
 
-                <View style={styles.dataContainer}>
                     <BackButton />
-                    <View style={{ marginTop: -50 }}>
+                <View style={styles.dataContainer}>
+                    <View style={{marginTop:-140}}>
                         <View style={styles.title}>
                             <Text style={styles.text}>Orden de {name}</Text>
                         </View>
 
-                        <ScrollView style={{ height: '50%' }}>
-                            <View style={styles.items}>
-                                {order.items.map((item, index) => (
-                                    <ItemCard key={index} item={item} />
-                                ))}
-                            </View>
-                        </ScrollView>
+                        <FlatList
+                            data={order.items}
+                            renderItem={({ item }) => (
+                                <ItemCard item={item} />
+                            )}
+                            keyExtractor={item => item.id}
+                            style={{ padding: 20, height:'50%' }}
+                        />
                     </View>
                 </View>
 
@@ -53,8 +54,8 @@ const OrderScreen = ({ route }) => {
                     </View>
                 </View>
 
-                <BottomSheetCancel order={order} userId={userId} bottomSheetCancel={bottomSheetCancel} />
-                <BottomSheetConfirm order={order} userId={userId} bottomSheetConfirm={bottomSheetConfirm} />
+                <BottomSheetCancel order={order} userId={userId} bottomSheetCancel={bottomSheetCancel} orderId={orderId}/>
+                <BottomSheetConfirm order={order} userId={userId} bottomSheetConfirm={bottomSheetConfirm} orderId={orderId}/>
 
             </SafeAreaView>
         </BottomSheetModalProvider>

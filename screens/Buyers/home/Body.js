@@ -1,60 +1,72 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView} from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, TouchableOpacity, Platform } from 'react-native'
 import React from 'react'
 import Item from '../../components/Item';
 import { items, categories } from '../../constants'
+import BottomSheetFilter from './BottomSheetFilter';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from 'react-native-paper';
-
 
 const Body = (props) => {
 
+    const [contentHeight, setContentHeight] = React.useState(0)
+    const [filters, setFilters] = React.useState([{ minPrice: 0, maxPrice: 500 }, { categories:[] }])
     const theme = useTheme()
-
-    const filter = (item, category) => {
-        return item.name.toLowerCase().includes(props.searchPhrase.toLowerCase()) && item.categories.includes(category)
-    }
 
     return (
         <SafeAreaView>
-            <ScrollView>
-                <View style={styles.categories}>
-                    {categories.map((category, index) => (
-                        <View style={{marginBottom: 20}} key={index}>
-                            <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>{category}</Text>
-                            <View style={styles.items}>
-                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                                {items.filter(item => filter(item, category)).map((item, index) => (
-                                    <View style={styles.item} key={item.id}>
-                                        <Item item={item} />
-                                    </View>
-                                ))}
-                                </ScrollView>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
+            <View style={{ paddingBottom:300 }}>
+            <FlatList
+                data={categories.filter(category => filters[1].categories.length === 0 || filters[1].categories.includes(category))}
+                renderItem={({ item, index }) => 
+                    <View style={{padding:20}}>
+                        <Category category={item} key={index} props={props} filters={filters} />
+                    </View>
+                }
+                keyExtractor={item => item}
+                showsVerticalScrollIndicator={false}
+                onContentSizeChange={(width, height) => setContentHeight(height)}
+                contentContainerStyle={{ paddingBottom: contentHeight / categories.length }}
+            />
+            </View>
+            <BottomSheetFilter bottomSheetFilter={props.bottomSheetFilter} filters={filters} setFilters={setFilters} />
         </SafeAreaView>
+    )
+}
+
+const Category = (props) => {
+
+    const filter = (item, category) => {
+        return item.name.toLowerCase().includes(props.props.searchPhrase.toLowerCase()) && item.categories.includes(category) && item.price >= props.filters[0].minPrice && item.price <= props.filters[0].maxPrice
+    }
+
+    return (
+        <View style={{ marginBottom: 20 }} key={props.index}>
+
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>{props.category}</Text>
+            <FlatList
+                data={items.filter(item => filter(item, props.category))}
+                renderItem={({ item }) =>
+                    <View style={styles.item} key={item.id}>
+                        <Item item={item} />
+                    </View>
+                }
+                keyExtractor={item => item.id}
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+            />
+
+        </View>
     )
 }
 
 export default Body
 
 const styles = StyleSheet.create({
-    categories: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        padding: 20,
-        paddingBottom: 450,
-    },
-    items: {
-        flexDirection: 'row',
-    },
     item: {
-        alignItems: 'center',
-        justifyContent: 'center',
         borderRadius: 50,
         marginRight: 15,
         borderWidth: 1,
         borderColor: '#ddd',
+        height: 225,
     },
 })

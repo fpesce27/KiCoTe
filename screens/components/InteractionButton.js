@@ -8,8 +8,8 @@ const InteractionButton = (props) => {
 
     return (
         <View style={styles.inputContainer}>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: props.background }} onPress={props.onPress}>
-                <Text style={{ ...styles.buttonText, fontFamily: theme.fonts.regular, color:props.color }}>{props.text}</Text>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: props.background ? props.background : theme.colors.accent }} onPress={props.onPress}>
+                <Text style={{ ...styles.buttonText, fontFamily: theme.fonts.regular, color: props.color ? props.color : theme.colors.primary }}>{props.icon}{props.text}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -19,7 +19,6 @@ export default InteractionButton
 
 const styles = StyleSheet.create({
     inputContainer:{
-        margin: 15,
         shadowOffset: {
           width: 0,
           height: 4,
@@ -27,6 +26,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4.65,
         borderRadius: 24,
+        width: '100%',
+        padding: 10,
       },
       button: {
         width: '100%',

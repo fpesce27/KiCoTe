@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar'
 import { db, auth, firestore } from '../../db/firebase'
 import { useTheme, TextInput } from 'react-native-paper'
 import { BackButton } from '../components/Controls'
+import InteractionButton from '../components/InteractionButton'
 
 const Register = ({ route }) => {
 
@@ -14,7 +15,7 @@ const Register = ({ route }) => {
     const [password, setPassword] = useState({ value: '', error: '' })
     const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' })
     const role = route.params.role
-    const navigation = useNavigation()
+    const school = route.params.school
     const theme = useTheme()
 
     const onSignUpPressed = () => {
@@ -28,10 +29,9 @@ const Register = ({ route }) => {
                         displayName: username.value,
                         photoUrl: require('../../assets/icon.png')
                     })
-                    db.collection('Users').doc(authUser.user.uid).set({
+                    db.collection('Schools').doc(school).collection('Users').doc(authUser.user.uid).set({
                         username: username.value,
                         email: email.value,
-                        password: password.value,
                         photoUrl: require('../../assets/icon.png'),
                         createdAt: new Date(),
                         role: role
@@ -51,7 +51,10 @@ const Register = ({ route }) => {
                     height: '95%',
                 }}>
                 <StatusBar style="auto" />
-                <BackButton />
+                <View style={{marginBottom:-50}}>
+                    <BackButton />
+                </View>
+
                 <View style={styles.titleContainer}>
                     <Text style={{ ...styles.title, fontFamily: theme.fonts.regular }}>Crea Tu Cuenta</Text>
                     <Text style={{ ...styles.subtitle, fontFamily: theme.fonts.regular }}>Ingresa tus datos para crear tu cuenta</Text>
@@ -101,15 +104,11 @@ const Register = ({ route }) => {
                 <View style={styles.terms}>
                     <Text style={{ fontFamily: theme.fonts.regular, fontSize: 14 }}>Al registrarte, aceptas nuestros</Text>
                     <TouchableOpacity>
-                        <Text style={{ fontFamily: theme.fonts.regular, fontSize: 14, color: theme.colors.primary }}> Términos y condiciones</Text>
+                        <Text style={{ fontFamily: theme.fonts.regular, fontSize: 14, color: theme.colors.accent }}> Términos y condiciones</Text>
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.colors.primary }} onPress={onSignUpPressed}>
-                        <Text style={{ ...styles.buttonText, fontFamily: theme.fonts.regular }}>Crear Cuenta</Text>
-                    </TouchableOpacity>
-                </View>
+                <InteractionButton onPress={onSignUpPressed} text="Crear Cuenta" />
 
             </KeyboardAvoidingView>
         </SafeAreaView>
@@ -168,159 +167,3 @@ const styles = StyleSheet.create({
         margin: 15,
     },
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* <View style={styles.title}>
-                    <Text style={styles.titleText}>Create Account</Text>
-                    <Text style={styles.subtitle}>Let's Create Account Together</Text>
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Input
-                        placeholder="Enter Your Username"
-                        style={styles.input}
-                        label="Username"
-                        labelStyle={{ color: '#000' }}
-                        returnKeyType="next"
-                        value={username.value}
-                        onChangeText={(text) => setUsername({ value: text, error: '' })}
-                        error={!!username.error}
-                        errorText={username.error}
-                    />
-                    <Input
-                        placeholder="Enter Your Email"
-                        style={styles.input}
-                        label="Email"
-                        labelStyle={{ color: '#000' }}
-                        returnKeyType="next"
-                        value={email.value}
-                        onChangeText={(text) => setEmail({ value: text, error: '' })}
-                        error={!!email.error}
-                        errorText={email.error}
-                        autoCapitalize="none"
-                        autoCompleteType="email"
-                        textContentType="emailAddress"
-                        keyboardType="email-address"
-                    />
-                    <Input
-                        placeholder="Enter Your Password"
-                        style={styles.input}
-                        label="Password"
-                        labelStyle={{ color: '#000' }}
-                        returnKeyType="done"
-                        value={password.value}
-                        onChangeText={(text) => setPassword({ value: text, error: '' })}
-                        error={!!password.error}
-                        errorText={password.error}
-                        secureTextEntry
-                    />
-                </View>
-
-                <TouchableOpacity style={styles.registerButton} onPress={onSignUpPressed}>
-                    <Text style={styles.registerButtonText}>Register</Text>
-                </TouchableOpacity>
-
-                <View style={styles.signin}>
-                    <Text style={{ color: '#9E9E9E' }}>Alreay Have An Account?</Text>
-                    <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                        <Text style={styles.signinText}>Login</Text>
-                    </TouchableOpacity>
-                </View>
-
-const styles = StyleSheet.create({
-    title: {
-        display: 'flex',
-        alignItems: 'flex-start',
-        padding: 10,
-        margin: 15,
-    },
-    titleText: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 15,
-        fontWeight: 'normal',
-        color: '#9E9E9E',
-    },
-    inputContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-        margin: 0,
-    },
-    input: {
-        width: '100%',
-        marginBottom: 10,
-        marginLeft: 12,
-    },
-    forgotPassword: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        margin: 15,
-        marginTop: 0,
-    },
-    registerButton: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#007AFF',
-        padding: 10,
-        margin: 15,
-        borderRadius: 15,
-        height: 60,
-    },
-    registerButtonText: {
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    signin: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 15,
-        marginTop: 0,
-    },
-    signinText: {
-        color: '#000',
-        fontSize: 15,
-        fontWeight: 'bold',
-        margin: 5,
-    },
-}) */}

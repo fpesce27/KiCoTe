@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ArrowLeftIcon, HeartIcon } from 'react-native-heroicons/outline';
 import { HeartIcon as HeartIconSolid } from 'react-native-heroicons/solid';
 import { db, auth } from '../../db/firebase';
+import { useTheme } from 'react-native-paper';
 
 export function Controls(props) {   
     
@@ -28,6 +29,15 @@ export function BackButton() {
 
 export function HeartButton(props) {
     const [isFavourite, setFavourite] = useState(false);
+    const theme = useTheme()
+
+    React.useEffect(() => {
+        db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').where('id', '==', props.item.id).get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                setFavourite(true);
+            }
+        })
+    }, [])
 
     return (
         <View style={styles.controls}>
@@ -35,16 +45,16 @@ export function HeartButton(props) {
                 handleFavs(props.item);
                 setFavourite(!isFavourite);
             }}>
-                {isFavourite ? <HeartIconSolid style={{ ...styles.icon, color: 'lightgreen' }} /> : <HeartIcon style={styles.icon} />}
+                {isFavourite ? <HeartIconSolid style={{ ...styles.icon, color: theme.colors.accent }} /> : <HeartIcon style={styles.icon} />}
             </TouchableOpacity>
         </View>
     )
 }
 
 function handleFavs(item) {
-    db.collection('users').doc(auth.currentUser.uid).collection('favourites').where('id', '==', item.id).get().then((querySnapshot) => {
+    db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').where('id', '==', item.id).get().then((querySnapshot) => {
         if (querySnapshot.empty) {
-            db.collection('users').doc(auth.currentUser.uid).collection('favourites').add({
+            db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').add({
                 id: item.id,
                 name: item.name,
                 price: item.price,
@@ -52,7 +62,7 @@ function handleFavs(item) {
             })
         } else {
             querySnapshot.forEach((doc) => {
-                db.collection('users').doc(auth.currentUser.uid).collection('favourites').doc(doc.id).delete();
+                db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').doc(doc.id).delete();
             })
         }
     })
@@ -67,6 +77,7 @@ const styles = StyleSheet.create({
     },
     controls: {
         padding: 20,
+        zIndex: 1,
     },
     backButton: {
         display: 'flex',

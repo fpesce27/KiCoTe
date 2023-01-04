@@ -12,7 +12,7 @@ const Loading = () => {
             <Spinner
                 visible={true}
                 overlayColor={'#fff'}
-                color={theme.colors.primary}
+                color={theme.colors.accent}
             />
         </SafeAreaView>
     )

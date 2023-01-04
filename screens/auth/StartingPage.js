@@ -13,7 +13,7 @@ const StartingPage = (props) => {
     const theme = useTheme()
     
     const handleRole = (role) => {
-        navigation.navigate('Register', { role: role })
+        navigation.navigate('ChooseSchool', { role: role })
     }
 
     return (
@@ -31,8 +31,8 @@ const StartingPage = (props) => {
                     <Text style={styles.subtitle}>¿Qué vas a hacer en la app?</Text>
                 </View>
 
-                <InteractionButton text="Comprar" background={theme.colors.primary} color="#fff" onPress={() => handleRole('Buyers')} />
-                <InteractionButton text="Vender" background="#fff" color={theme.colors.primary} onPress={() => handleRole('Sellers')} /> 
+                <InteractionButton text="Comprar" onPress={() => handleRole('Buyers')} />
+                <InteractionButton text="Vender" background={theme.colors.primary} color={theme.colors.accent} onPress={() => handleRole('Sellers')} /> 
             </View>
         </SafeAreaView>
     )

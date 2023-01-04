@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import React from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { auth } from '../../../../db/firebase'
@@ -7,6 +7,7 @@ import { BackButton } from '../../../components/Controls'
 import { Input } from '@rneui/base'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { nameValidator } from '../../../auth/validators/username'
+import InteractionButton from '../../../components/InteractionButton'
 
 const ProfileScreen = () => {
 
@@ -61,83 +62,73 @@ const ProfileScreen = () => {
     }
   }
 
-  const height = useHeaderHeight()
-
   return (
     <SafeAreaView>
       <KeyboardAvoidingView behavior="position">
+        <BackButton />
         <View style={styles.container}>
-          <View style={styles.backBtn}>
-            <BackButton />
-          </View>
 
           <Image source={{ uri: image || auth.currentUser.photoURL }} style={styles.profileImage} />
 
           <Text style={styles.name}>{auth.currentUser.displayName}</Text>
           <Text style={styles.email}>{auth.currentUser.email}</Text>
 
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <Text style={styles.buttonText}>Change Profile Picture</Text>
-          </TouchableOpacity>
+          <View style={{ width:'100%', margin:15 }} >
 
-          <TouchableOpacity style={styles.button} onPress={() => {
-            setSelectChangeUsername(!selectChangeUsername)
-            setSelectChangePassword(false)
-          }}>
-            <Text style={styles.buttonText}>Change Username</Text>
-          </TouchableOpacity>
+            <InteractionButton text="Cambiar Foto De Perfil" onPress={pickImage} />
 
-          <TouchableOpacity style={styles.button} onPress={() => {
-            setSelectChangePassword(!selectChangePassword)
-            setSelectChangeUsername(false)
-          }}>
-            <Text style={styles.buttonText}>Change Password</Text>
-          </TouchableOpacity>
+            <InteractionButton text="Cambiar Nombre De Usuario" onPress={() => {
+              setSelectChangeUsername(!selectChangeUsername)
+              setSelectChangePassword(false)
+            }} />
+              
+            <InteractionButton text="Cambiar Contraseña" onPress={() => {
+              setSelectChangePassword(!selectChangePassword)
+              setSelectChangeUsername(false)
+            }} />
 
-          <View style={styles.inputContainer}>
+          </View>
+
+          <View style={{width:'100%'}}>
 
             {selectChangeUsername ? (
               <>
                 <Input
-                  placeholder="Username"
+                  placeholder="Nombre De Usuario"
                   onChangeText={setUsername}
                   value={username}
-                  label="Username"
+                  label="Nombre De Usuario"
                   labelStyle={{ color: 'black' }}
                   style={styles.input}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={updateUsername}>
-                  <Text style={styles.buttonText}>Update Username</Text>
-                </TouchableOpacity>
+                <InteractionButton text="Actualizar Nombre De Usuario" onPress={updateUsername} />
               </>
             ) : null}
 
             {selectChangePassword ? (
               <>
                 <Input
-                  placeholder='Password'
+                  placeholder='Contraseña'
                   onChangeText={setPassword}
                   value={password}
                   secureTextEntry
-                  label="Password"
+                  label="Contraseña"
                   labelStyle={{ color: 'black' }}
                   style={styles.input}
                 />
 
                 <Input
-                  placeholder='Confirm Password'
+                  placeholder='Confirmar Contraseña'
                   onChangeText={setConfirmPassword}
                   value={confirmPassword}
                   secureTextEntry
-                  label="Confirm Password"
+                  label="Confirmar Contraseña"
                   labelStyle={{ color: 'black' }}
                   style={styles.input}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={updatePassword}>
-                  <Text style={styles.buttonText}>Update Password</Text>
-                </TouchableOpacity>
+                <InteractionButton text="Actualizar Contraseña" onPress={updatePassword} />
               </>
             ) : null}
 
@@ -153,14 +144,12 @@ const ProfileScreen = () => {
 export default ProfileScreen
 
 const styles = StyleSheet.create({
-  backBtn: {
-    width: '100%',
-  },
   container: {
     padding: 20,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    marginTop: Platform.OS === 'ios' ? -80 : -120,
   },
   profileImage: {
     width: 100,
@@ -192,10 +181,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  inputContainer: {
-    width: '100%',
-    marginTop: 20,
   },
   input: {
     marginLeft: 15,

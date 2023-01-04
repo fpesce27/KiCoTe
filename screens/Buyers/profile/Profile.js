@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Options from './Options'
 import Data from './Data'
 import Logout from './Logout'
+import InteractionButton from '../../components/InteractionButton'
 
 const Profile = () => {
   return (

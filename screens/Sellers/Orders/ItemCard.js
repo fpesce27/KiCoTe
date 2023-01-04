@@ -10,11 +10,11 @@ const ItemCard = (props) => {
     <TouchableOpacity style={completed ? [styles.container, {backgroundColor:'lightgreen'}] : styles.container} onPress={() => setCompleted(!completed)}>
         <View style={styles.imageContainer}>
             <Image style={styles.image} source={require('../../../assets/icon.png')} />
-            <Text style={styles.text}>{props.item.name}</Text>
+            <Text style={styles.text}>{props.item.cartItem.name}</Text>
         </View>
-        <Text style={styles.text}>{props.item.amount}</Text>
+        <Text style={styles.text}>{props.item.cartItem.amount}</Text>
         <Text style={styles.text}>
-            ${props.item.price * props.item.amount}
+            ${props.item.cartItem.price * props.item.cartItem.amount}
         </Text>
     </TouchableOpacity>
   )

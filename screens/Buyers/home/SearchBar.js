@@ -1,20 +1,23 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline'
+import { useTheme } from 'react-native-paper'
+import { categories } from '../../constants'
 
 export const SearchBar = (props) => {
   
+  const theme = useTheme()
+
     return (
     <View style={styles.searchBar}>
         <MagnifyingGlassIcon style={{color : 'lightgray'}} />
         <TextInput
             style={styles.searchInput}
-            placeholder="Search"
+            placeholder="Buscar..."
             placeholderTextColor="lightgray"
             value={props.searchPhrase}
             onChangeText={props.setSearchPhrase}
         />
-        <AdjustmentsHorizontalIcon style={{color : 'lightgray'}}/>
       </View>
   )
 }
@@ -29,7 +32,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 10,
         margin: 0,
-        borderRadius: 10,
+        borderRadius: 50,
+        marginBottom: 20,
+        width: '80%',
+        height: 50,
       },
       searchInput: {
         flex: 1,

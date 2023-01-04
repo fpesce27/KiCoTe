@@ -3,15 +3,17 @@ import React from 'react'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native';
 import { db } from '../../../db/firebase';
+import { useTheme } from 'react-native-paper';
 
 const BottomSheetConfirm = (props) => {
     
     const navigation = useNavigation();
     const bottomSheetConfirm = props.bottomSheetConfirm;
+    const theme = useTheme();
 
     const confirmCompletion = () => {
-        db.collection('Buyers').doc(props.userId).collection('orders').doc(props.order.id).update({
-            status: 'completed'
+        db.collection('Schools').doc(theme.data.schoolId).collection('Users').doc(props.userId).collection('Orders').doc(props.orderId).update({
+            status: 'Completed'
         })
         bottomSheetConfirm.current?.dismiss();
         navigation.goBack();

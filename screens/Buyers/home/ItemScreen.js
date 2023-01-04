@@ -42,29 +42,40 @@ function Item({ route }) {
     const theme = useTheme()
 
     return (
-        <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: 'lightgray', }}>
+        <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: theme.colors.secondary, }}>
             <Controls item={item} />
+
             <View style={styles.imageContainer}>
                 <Image source={item.image} style={styles.image} />
             </View>
+
             <View style={styles.textContainer}>
+
                 <View style={styles.nameAndPriceContainer}>
                     <Text style={styles.name}>{item.name}</Text>
-                    <Text style={{ fontSize: 25, color: theme.colors.primary }}>${item.price}</Text>
+                    <Text style={{ fontSize: 25, color: theme.colors.accent }}>${item.price}</Text>
                 </View>
+
                 <View style={styles.descriptionContainer}>
-                    <Text style={styles.description}>
-                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </Text>
+                    <ScrollView style={{height: 55}}>
+                        <Text style={styles.description}>
+                            lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                    </ScrollView>
                 </View>
+
                 <View style={styles.amountAndTotal}>
-                    <ManageAmount setAmount={setAmount} amount={amount}/>
+                    <View>
+                        <ManageAmount setAmount={setAmount} amount={amount}/>
+                    </View>
                     <View style={styles.totalContainer}>
                         <Text style={styles.text}>Total: ${(item.price * amount).toFixed(2)}</Text>
                     </View>
                 </View>
-                <InteractionButton text="Agregar al Carrito" background={theme.colors.primary} color="#fff" onPress={() => handleAddToCart(item, amount, navigation)} />
+
+                <InteractionButton text="Agregar al Carrito" onPress={() => handleAddToCart(item, amount, navigation)} />
+                
             </View>
         </SafeAreaView>
     )
@@ -87,12 +98,14 @@ export const ManageAmount = (props) => {
 
     return (
         <View style={styles.amountContainer}>
-            <TouchableOpacity style={styles.amountIcon} onPress={() => handleDecreaseAmount()}>
-                <MinusIcon style={{ color: theme.colors.secondary }} />
+            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.secondary}} onPress={() => handleDecreaseAmount()}>
+                <MinusIcon style={{ color: theme.colors.accent }} />
             </TouchableOpacity>
-            <Text style={styles.text}>{props.amount}</Text>
-            <TouchableOpacity style={styles.amountIcon} onPress={() => handleIncreaseAmount()}>
-                <PlusIcon style={{ color: theme.colors.secondary }} />
+            <View style={{width:'100%', alignItems:'center', marginHorizontal:10}}>
+                <Text style={styles.text}>{props.amount}</Text>
+            </View>
+            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.accent}} onPress={() => handleIncreaseAmount()}>
+                <PlusIcon style={{ color: theme.colors.primary }} />
             </TouchableOpacity>
         </View>
     )
@@ -101,13 +114,12 @@ export const ManageAmount = (props) => {
 const styles = StyleSheet.create({
     imageContainer: {
         width: '100%',
-        height: '50%',
+        height: Platform.OS === 'ios' ? '50%' : '45%',
         zIndex: -1,
-
         marginTop: -70,
     },
     textContainer: {
-        height: '50%',
+        height: Platform.OS === 'ios' ? '50%' : '60%',
         backgroundColor: 'white',
         borderRadius: 60,
     },

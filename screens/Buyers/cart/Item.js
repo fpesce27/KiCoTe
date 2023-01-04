@@ -23,21 +23,28 @@ const Item = (props) => {
 
   return (
     <View key={id} style={styles.cartItem}>
+
       <View style={styles.imageContainer}>
         <Image source={{ uri: cartItem.image }} />
       </View>
+
       <View style={styles.dataContainer}>
-        <Text style={{fontFamily:theme.fonts.regular, fontSize:20}}>{cartItem.name}</Text>
-        <Text style={{color:theme.colors.primary, fontSize:15}}>${(cartItem.price * amount).toFixed(2)}</Text>
+        <Text style={{ fontSize:20 }}>{cartItem.name}</Text>
+        <Text style={{color:theme.colors.accent, fontSize:15}}>${(cartItem.price * amount).toFixed(2)}</Text>
       </View>
+
       <View style={styles.controls}>
-        <View>
+
+        <View style={{width:'40%'}}>
           <ManageAmount item={cartItem} amount={amount} setAmount={setAmount} updateAmount={updateAmount()} />
         </View>
+
         <TouchableOpacity style={{padding:10}} onPress={() => removeItem(id)}>
-          <TrashIcon style={{color:theme.colors.secondary}}/>
+          <TrashIcon style={{color:'red'}}/>
         </TouchableOpacity>
+
       </View>
+
     </View>
   )
 }
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 100,
     overflow: 'hidden',
-    backgroundColor: 'red',
+    backgroundColor: '#ddd',
   },
   dataContainer: {
     display: 'flex',

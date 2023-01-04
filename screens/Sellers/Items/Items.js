@@ -6,35 +6,34 @@ import { db } from '../../../db/firebase'
 import { ScrollView } from 'react-native'
 import { Item } from '../../components/Item'
 import { items as i } from '../../constants'
+import { useTheme } from 'react-native-paper'
 
 const Items = () => {
   
   const [items, setItems] = React.useState([])
 
   React.useEffect(() => {
-    /* db.collection('Sellers').onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        setItems(doc.data().items)
-      })
-    }) */
-    setItems(i)
+    
   }, [])
 
-  console.log(items)
   
   return (
     <SafeAreaView>
+
       <Header />
+      
       <View style={styles.searchBar}>
         <View style={{width: '90%'}}>
-          <SearchBar />
+          <SearchBar seller={true}/>
         </View>
       </View>
+
       <View>
         <ScrollView>
           
         </ScrollView>
       </View>
+
     </SafeAreaView>
   )
 }
@@ -42,13 +41,16 @@ const Items = () => {
 export default Items
 
 const Header = () => {
+
+  const theme = useTheme()
+
   return (
     <View style={styles.container}>
         <View style={styles.title}>
           <Text style={styles.text}>Items</Text>
         </View>
         <TouchableOpacity>
-          <Text style={styles.addButtonText}>+</Text>
+          <Text style={{fontSize:40, color:theme.colors.primary}}>+</Text>
         </TouchableOpacity>
       </View>
   )
@@ -71,11 +73,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 40,
     fontWeight: 'bold',
-  },
-  addButtonText: {
-    color: 'black',
-    fontSize: 40,
-    textAlign: 'center',
   },
   searchBar: {
     width: '100%',

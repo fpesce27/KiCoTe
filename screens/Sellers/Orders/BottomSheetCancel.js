@@ -3,23 +3,26 @@ import React from 'react'
 import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native';
 import { db } from '../../../db/firebase';
+import { useTheme } from 'react-native-paper';
 
 const BottomSheetCancel = (props) => {
 
     const navigation = useNavigation();
     const bottomSheetCancel = props.bottomSheetCancel;
     const [reason, setReason] = React.useState('')
+    const theme = useTheme()
 
     const confirmCancel = () => {
         if (reason === '') {
             alert('Please enter a reason for cancelling the order')
         } else {
-            db.collection('Buyers').doc(props.userId).collection('orders').doc(props.order.id).update({
-                status: 'cancelled',
+            db.collection('Schools').doc(theme.data.schoolId).collection('Users').doc(props.userId).collection('Orders').doc(props.orderId).update({
+                status: 'Cancelled',
                 reason: reason
+            }).then(() => {
+                bottomSheetCancel.current?.dismiss();
+                navigation.goBack();
             })
-            bottomSheetCancel.current?.dismiss();
-            navigation.goBack();
         }
     }
 
