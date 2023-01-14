@@ -5,10 +5,6 @@ import { db, auth } from '../../../db/firebase';
 import { ManageAmount } from '../home/ItemScreen';
 import { useTheme } from 'react-native-paper';
 
-function removeItem(id) {
-  db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(id).delete();
-}
-
 const Item = (props) => {
 
   const { id, cartItem } = props;
@@ -16,28 +12,38 @@ const Item = (props) => {
   const theme = useTheme();
 
   const updateAmount = () => {
-    db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(id).update({
-      amount: amount,
+    db.collection('users').doc(auth.currentUser.uid).collection('cart').doc(id).update({
+      amount: amount
     })
+  }
+
+  React.useEffect(() => {
+    updateAmount()
+  }, [amount])
+
+  React.useEffect(() => {
+    setAmount(cartItem.amount)
+  }, [cartItem])
+
+  const removeItem = (id) => {
+    db.collection('users').doc(auth.currentUser.uid).collection('cart').doc(id).delete()
   }
 
   return (
     <View key={id} style={styles.cartItem}>
 
       <View style={styles.imageContainer}>
-        <Image source={{ uri: cartItem.image }} />
+        <Image source={{ uri: cartItem.image }} style={{width:'100%', height:'100%'}} />
       </View>
 
       <View style={styles.dataContainer}>
-        <Text style={{ fontSize:20 }}>{cartItem.name}</Text>
-        <Text style={{color:theme.colors.accent, fontSize:15}}>${(cartItem.price * amount).toFixed(2)}</Text>
+        <Text>{cartItem.name}</Text>
+        <Text style={{color:theme.colors.accent}}>${(cartItem.price * amount).toFixed(2)}</Text>
       </View>
 
       <View style={styles.controls}>
 
-        <View style={{width:'40%'}}>
-          <ManageAmount item={cartItem} amount={amount} setAmount={setAmount} updateAmount={updateAmount()} />
-        </View>
+        <ManageAmount item={cartItem} amount={amount} setAmount={setAmount} />
 
         <TouchableOpacity style={{padding:10}} onPress={() => removeItem(id)}>
           <TrashIcon style={{color:'red'}}/>
@@ -73,7 +79,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 100,
     overflow: 'hidden',
-    backgroundColor: '#ddd',
   },
   dataContainer: {
     display: 'flex',
@@ -86,5 +91,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '50%',
   },
 })

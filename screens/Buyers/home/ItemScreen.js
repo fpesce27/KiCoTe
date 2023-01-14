@@ -9,47 +9,46 @@ import { db, auth } from '../../../db/firebase';
 import { useTheme } from 'react-native-paper';
 import InteractionButton from '../../components/InteractionButton';
 
-function handleAddToCart(item, amount, navigation) {
-
-    let founded = false;
-
-    db.collection('Users').doc(auth.currentUser.uid).collection('Cart').where('id', '==', item.id).get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            founded = true;
-            db.collection('Users').doc(auth.currentUser.uid).collection('Cart').doc(doc.id).update({
-                amount: doc.data().amount + amount
-            })
-        })
-    }).then(() => {
-        if (!founded) {
-            db.collection('Users').doc(auth.currentUser.uid).collection('Cart').add({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                image: item.image,
-                amount: amount
-            })
-        }
-    })
-
-    navigation.navigate("Home")
-}
-
 function Item({ route }) {
     const { item } = route.params;
     const [amount, setAmount] = useState(1);
     const navigation = useNavigation();
     const theme = useTheme()
 
+    const handleAddToCart = () => {
+        let founded = false;
+
+        db.collection('users').doc(auth.currentUser.uid).collection('cart').where('id', '==', item.id).get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                founded = true;
+                db.collection('users').doc(auth.currentUser.uid).collection('cart').doc(doc.id).update({
+                    amount: doc.data().amount + amount
+                })
+            })
+        }).then(() => {
+            if (!founded) {
+                db.collection('users').doc(auth.currentUser.uid).collection('cart').add({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    amount: amount
+                })
+            }
+        })
+
+        navigation.navigate("Home")
+    }
+
     return (
-        <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: theme.colors.secondary, }}>
+        <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: theme.colors.primary, }}>
             <Controls item={item} />
 
             <View style={styles.imageContainer}>
-                <Image source={item.image} style={styles.image} />
+                <Image source={{uri:item.image}} style={styles.image} />
             </View>
 
-            <View style={styles.textContainer}>
+            <View style={{...styles.textContainer, backgroundColor:theme.colors.secondary}}>
 
                 <View style={styles.nameAndPriceContainer}>
                     <Text style={styles.name}>{item.name}</Text>
@@ -58,23 +57,18 @@ function Item({ route }) {
 
                 <View style={styles.descriptionContainer}>
                     <ScrollView style={{height: 55}}>
-                        <Text style={styles.description}>
-                            lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Text>
+                        <Text style={styles.description}>{item.description}</Text>
                     </ScrollView>
                 </View>
 
                 <View style={styles.amountAndTotal}>
-                    <View>
-                        <ManageAmount setAmount={setAmount} amount={amount}/>
-                    </View>
+                    <ManageAmount setAmount={setAmount} amount={amount}/>
                     <View style={styles.totalContainer}>
                         <Text style={styles.text}>Total: ${(item.price * amount).toFixed(2)}</Text>
                     </View>
                 </View>
 
-                <InteractionButton text="Agregar al Carrito" onPress={() => handleAddToCart(item, amount, navigation)} />
+                <InteractionButton text="Agregar al Carrito" onPress={() => handleAddToCart(item, amount)} />
                 
             </View>
         </SafeAreaView>
@@ -84,10 +78,11 @@ function Item({ route }) {
 export default Item
 
 export const ManageAmount = (props) => {
+
     const theme = useTheme()
 
     const handleIncreaseAmount = () => {
-        props.setAmount(props.amount + 1)
+        props.setAmount(Math.min(props.amount + 1, 99))
         props.updateAmount
     }
 
@@ -98,13 +93,13 @@ export const ManageAmount = (props) => {
 
     return (
         <View style={styles.amountContainer}>
-            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.secondary}} onPress={() => handleDecreaseAmount()}>
+            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.primary}} onPress={handleDecreaseAmount}>
                 <MinusIcon style={{ color: theme.colors.accent }} />
             </TouchableOpacity>
-            <View style={{width:'100%', alignItems:'center', marginHorizontal:10}}>
-                <Text style={styles.text}>{props.amount}</Text>
+            <View style={{alignItems:'center', marginHorizontal:15}}>
+                <Text style={{fontSize:18}}>{props.amount}</Text>
             </View>
-            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.accent}} onPress={() => handleIncreaseAmount()}>
+            <TouchableOpacity style={{...styles.amountIcon, backgroundColor:theme.colors.accent}} onPress={handleIncreaseAmount}>
                 <PlusIcon style={{ color: theme.colors.primary }} />
             </TouchableOpacity>
         </View>
@@ -117,10 +112,17 @@ const styles = StyleSheet.create({
         height: Platform.OS === 'ios' ? '50%' : '45%',
         zIndex: -1,
         marginTop: -70,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        width: 300,
+        height: 300,
+        borderRadius: 1000,
     },
     textContainer: {
         height: Platform.OS === 'ios' ? '50%' : '60%',
-        backgroundColor: 'white',
         borderRadius: 60,
     },
     nameAndPriceContainer: {
@@ -167,14 +169,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
     totalContainer: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     },
+    text: {
+        fontSize: 20,
+    }
 })
 

@@ -6,14 +6,18 @@ import { BackButton } from '../../components/Controls'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import BottomSheetCancel from './BottomSheetCancel'
 import BottomSheetConfirm from './BottomSheetConfirm'
+import Background from '../../components/Background'
+import { useTheme } from 'react-native-paper'
 
 const OrderScreen = ({ route }) => {
 
     const { userId, name, order, orderId } = route.params
     const bottomSheetConfirm = React.useRef(null);
     const bottomSheetCancel = React.useRef(null);
+    const theme = useTheme()
 
     return (
+        <Background>
         <BottomSheetModalProvider>
             <SafeAreaView style={styles.container}>
 
@@ -21,7 +25,7 @@ const OrderScreen = ({ route }) => {
                 <View style={styles.dataContainer}>
                     <View style={{marginTop:-140}}>
                         <View style={styles.title}>
-                            <Text style={styles.text}>Orden de {name}</Text>
+                            <Text style={{...styles.text, color:theme.colors.secondary}}>Orden de {name}</Text>
                         </View>
 
                         <FlatList
@@ -36,7 +40,7 @@ const OrderScreen = ({ route }) => {
                 </View>
 
                 <View style={styles.bottomContainer}>
-                    <View style={styles.summaryContainer}>
+                    <View style={{...styles.summaryContainer, backgroundColor:theme.colors.secondary}}>
                         <View style={styles.totalContainer}>
                             <Text style={styles.summaryText}>Total</Text>
                         </View>
@@ -48,7 +52,7 @@ const OrderScreen = ({ route }) => {
                         <TouchableOpacity style={styles.button} onPress={() => bottomSheetCancel.current?.present()}>
                             <Text style={styles.buttonText}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ ...styles.button, backgroundColor: '#007AFF' }} onPress={() => bottomSheetConfirm.current?.present()}>
+                        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.colors.accent }} onPress={() => bottomSheetConfirm.current?.present()}>
                             <Text style={styles.buttonText}>Completado</Text>
                         </TouchableOpacity>
                     </View>
@@ -59,6 +63,7 @@ const OrderScreen = ({ route }) => {
 
             </SafeAreaView>
         </BottomSheetModalProvider>
+        </Background>
     )
 }
 
@@ -97,11 +102,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     button: {
-        backgroundColor: '#FF0000',
         padding: 10,
         margin: 15,
-        borderRadius: 10,
+        borderRadius: 24,
         width: '40%',
+        backgroundColor: '#FF0000',
     },
     buttonText: {
         color: 'white',
@@ -120,8 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 10,
         margin: 15,
-        borderRadius: 15,
-        backgroundColor: 'white',
+        borderRadius: 24,
     },
     totalContainer: {
         display: 'flex',

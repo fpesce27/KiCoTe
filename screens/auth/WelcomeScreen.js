@@ -4,11 +4,16 @@ import { useTheme } from 'react-native-paper'
 import InteractionButton from '../components/InteractionButton'
 import { useNavigation } from '@react-navigation/native'
 import Background from '../components/Background'
+import * as Location from 'expo-location';
 
 const WelcomeScreen = () => {
 
     const theme = useTheme()
     const navigation = useNavigation()
+
+    React.useEffect(() => {
+        Location.requestForegroundPermissionsAsync();
+    })
 
     return (
         <Background>
@@ -16,13 +21,15 @@ const WelcomeScreen = () => {
                 {
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-evenly',
+                    justifyContent: 'space-between',
                     height: '100%',
                 }
             }>
                 <View style={styles.logoAndTitle}>
-                    <Image source={require('../../assets/icon.png')} style={styles.logo} />
-                    <Text style={{...styles.title, fontFamily:theme.fonts.welcomeScreen, color:theme.colors.accent}}>Kicote</Text>
+                    <View style={{width: 200, height: 200}}>
+                        <Image source={require('../../assets/logo.png')} style={{width: '100%', height: '100%', borderRadius:100}} />
+                    </View>
+                    <Text style={{...styles.title, fontFamily:theme.fonts.welcomeScreen, color:theme.colors.accent2}}>Kicote</Text>
                     <Text style={{...styles.subtitle, fontFamily:theme.fonts.welcomeScreen}}>El Kiosco de tu Colegio, en tu Telefono</Text>
                 </View>
 
@@ -42,11 +49,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: '80%',
     },
-    logo: {
-        width: 150,
-        height: 150,
-        marginBottom: 20,
-    },
     title: {
         fontFamily: 'Inter',
         fontWeight: '700',
@@ -59,4 +61,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         lineHeight: 22,
       },
+    
 })

@@ -8,12 +8,12 @@ const Item = (props) => {
     const { item } = props;
     const navigation = useNavigation();
     const theme = useTheme();
-
+    
     return (
             <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate('Item', {item: item})}>
                 <Image
                     style={styles.itemImage}
-                    source={require('../../assets/icon.png')}
+                    source={{uri:item.image}}
                 />
                 <View style={styles.itemText}>
                     <Text style={styles.itemName}>{item.name}</Text>

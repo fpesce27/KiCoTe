@@ -7,6 +7,7 @@ import { auth } from '../../db/firebase'
 import { BackButton } from '../components/Controls'
 import { useTheme, TextInput } from 'react-native-paper'
 import InteractionButton from '../components/InteractionButton'
+import Background from '../components/Background'
 
 
 const ForgotPassword = () => {
@@ -25,6 +26,7 @@ const ForgotPassword = () => {
     }
 
     return (
+      <Background>
     <SafeAreaView>
         <KeyboardAvoidingView
             behavior="padding"
@@ -37,8 +39,8 @@ const ForgotPassword = () => {
             <BackButton />
             <View>
                 <View style={styles.titleContainer}>
-                    <Text style={{...styles.title, fontFamily:theme.fonts.regular}}>Recuperar Contraseña</Text>
-                    <Text style={{...styles.subtitle, fontFamily:theme.fonts.regular}}>Ingresa tu email para recuperar tu contraseña</Text>
+                    <Text style={{...styles.title, color:theme.colors.secondary}}>Recuperar Contraseña</Text>
+                    <Text style={{...styles.subtitle, color:theme.colors.secondary}}>Ingresa tu email para recuperar tu contraseña</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -51,10 +53,11 @@ const ForgotPassword = () => {
             </View>
 
 
-            <InteractionButton text="Recuperar Contraseña" onPress={forgotPassword} />
+            <InteractionButton text="Recuperar Contraseña" onPress={forgotPassword} disabled={email.value == ""}/>
 
         </KeyboardAvoidingView>
     </SafeAreaView>
+    </Background>
   )
 }
 
@@ -67,10 +70,11 @@ const styles = StyleSheet.create({
         margin: 15,
       },
       title: {
-        fontSize: 36,
+        fontSize: 33,
         display: 'flex',
         alignItems: 'center',
         textAlign: 'center',
+        marginBottom: 10,
       },
       subtitle: {
         fontSize: 18,

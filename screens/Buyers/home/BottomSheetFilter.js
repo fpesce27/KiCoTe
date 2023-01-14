@@ -21,8 +21,8 @@ const BottomSheetFilter = (props) => {
 
     const clearFilters = () => {
         setMinPrice(0)
-        setMaxPrice(500)
-        props.setFilters([ { minPrice: 0, maxPrice: 500 }, { categories:[] } ])
+        setMaxPrice(5000)
+        props.setFilters([ { minPrice: 0, maxPrice: 5000 }, { categories:[] } ])
     }
 
     return (
@@ -57,7 +57,7 @@ const BottomSheetFilter = (props) => {
                             setMaxPrice(values[1])
                         }}
                         min={0}
-                        max={500}
+                        max={5000}
                         sliderLength={320}
                         selectedStyle={{
                             backgroundColor: theme.colors.accent,

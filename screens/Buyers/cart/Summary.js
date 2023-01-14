@@ -18,17 +18,17 @@ const Summary = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.itemsTotal}>
+            {/* <View style={styles.itemsTotal}>
                 <Text style={{color:'gray'}}>Items ({props.items.length})</Text>
                 <Text style={{color:'gray'}}>${props.total.toFixed(2)}</Text>
             </View>
             <View style={styles.itemsTotal}>
                 <Text style={{color:'gray'}}>Descuento</Text>
                 <Text style={{color:'gray'}}>${props.discount}</Text>
-            </View>
-            <View style={{...styles.itemsTotal, borderTopWidth: 1, borderTopColor: '#000'}}>
+            </View> */}
+            <View style={{...styles.itemsTotal/* , borderTopWidth: 1, borderTopColor: '#000' */}}>
                 <Text style={{fontFamily:theme.fonts.regular, fontSize:20}}>Total</Text>
-                <Text style={{fontFamily:theme.fonts.regular, fontSize:20, color:theme.colors.primary}}>${(props.total - props.discount).toFixed(2)}</Text>
+                <Text style={{fontFamily:theme.fonts.regular, fontSize:20, color:theme.colors.accent}}>${(props.total - props.discount).toFixed(2)}</Text>
             </View>
         </View>
     )

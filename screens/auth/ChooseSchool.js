@@ -5,18 +5,18 @@ import { BackButton } from '../components/Controls'
 import { useTheme, TextInput } from 'react-native-paper'
 import {db} from '../../db/firebase'
 import { useNavigation } from '@react-navigation/native'
+import Background from '../components/Background'
 
-const ChooseSchool = ({route}) => {
+const ChooseSchool = () => {
     
     const theme = useTheme()
     const [school, setSchool] = React.useState('')
     const navigation = useNavigation()
-    const { role } = route.params
     const [suggestions, setSuggestions] = React.useState([])
 
     React.useEffect(() => {
         if (school.length > 0) {
-            db.collection('Schools').where('name', '>=', school).where('name', '<=', school + '\uf8ff').get()
+            db.collection('schools').where('name', '>=', school).where('name', '<=', school + '\uf8ff').get()
             .then((querySnapshot) => {
                 const schools = []
                 querySnapshot.forEach((doc) => {
@@ -24,6 +24,15 @@ const ChooseSchool = ({route}) => {
                 })
                 setSuggestions(schools)
             })
+
+            if (suggestions.length === 0){
+                db.collection('schools').doc(school).get()
+                .then((doc) => {
+                    if (doc.exists){
+                        setSuggestions([doc.data()])
+                    }
+                })
+            }
         }
         else {
             setSuggestions([])
@@ -31,6 +40,7 @@ const ChooseSchool = ({route}) => {
     }, [school])
 
     return (
+        <Background>
         <SafeAreaView>
             <KeyboardAvoidingView
                 behavior="padding"
@@ -42,10 +52,10 @@ const ChooseSchool = ({route}) => {
                     
                 <View style={{ flex: 1 }}><BackButton /></View>
 
-                <View style={{ flex: 3 }}>
+                <View style={{ flex: 2 }}>
 
                     <View style={styles.title}>
-                        <Text style={styles.titleText}>Selecciona Tu Institución</Text>
+                        <Text style={{...styles.titleText, color:theme.colors.secondary}}>Selecciona Tu Institución</Text>
                     </View>
 
                     <View style={styles.inputContainer}>
@@ -59,28 +69,33 @@ const ChooseSchool = ({route}) => {
                         <FlatList
                             data={suggestions}
                             renderItem={({item, index}) => (
-                                <TouchableOpacity onPress={() => navigation.navigate('Register', {school:item.id, role:role})} style={{borderBottomWidth:1, borderBottomColor:'#ddd'}}>
+                                <TouchableOpacity onPress={() => navigation.navigate('StartingPage', {schoolId:item.id})} style={styles.schoolContainer}>
                                     <Text style={{...styles.addSchoolText, padding:10}}>{item.name}</Text>
+                                    <View style={{display:'flex', flexDirection:'row', marginRight:10}}>
+                                        <Text style={styles.schoolData}>{item.direction}, </Text>
+                                        <Text style={styles.schoolData}>{item.location}</Text>
+                                    </View>
                                 </TouchableOpacity>
                             )}
                             keyExtractor={(item, index) => index.toString()}
                         />
                         }
                     </View>
-                    {role === 'Sellers' &&
+
                     <View style={styles.addSchool}>
 
                         <Text style={styles.subtitle}>No encuentras tu institución?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('AddSchool', {role:role})}>
+                        <TouchableOpacity onPress={() => navigation.navigate('AddSchool')}>
                             <Text style={{...styles.addSchoolText, color:theme.colors.accent}}>Agregala</Text>
                         </TouchableOpacity>
                         
                     </View>
-                    }
+                    
 
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
+        </Background>
     )
 }
 
@@ -129,5 +144,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginLeft: 5,
     },
+    schoolContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
+        borderBottomLeftRadius: 24,
+        borderBottomRightRadius: 24,
+        borderTopWidth: 1,
+        borderTopColor: '#E5E5E5',
+        padding: 10,
+    },
+    schoolData: {
+        opacity:0.5,
 
+    }
 })

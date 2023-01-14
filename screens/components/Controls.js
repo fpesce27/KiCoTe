@@ -32,12 +32,24 @@ export function HeartButton(props) {
     const theme = useTheme()
 
     React.useEffect(() => {
-        db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').where('id', '==', props.item.id).get().then((querySnapshot) => {
+        db.collection('users').doc(auth.currentUser.uid).collection('favourites').where('id', '==', props.item.id).get().then((querySnapshot) => {
             if (!querySnapshot.empty) {
                 setFavourite(true);
             }
         })
     }, [])
+
+    const handleFavs = (item) => {
+        db.collection('users').doc(auth.currentUser.uid).collection('favourites').where('id', '==', item.id).get().then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                db.collection('users').doc(auth.currentUser.uid).collection('favourites').doc(item.id).set(item);
+            } else {
+                querySnapshot.forEach((doc) => {
+                    db.collection('users').doc(auth.currentUser.uid).collection('favourites').doc(doc.id).delete();
+                })
+            }
+        })
+    }
 
     return (
         <View style={styles.controls}>
@@ -49,23 +61,6 @@ export function HeartButton(props) {
             </TouchableOpacity>
         </View>
     )
-}
-
-function handleFavs(item) {
-    db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').where('id', '==', item.id).get().then((querySnapshot) => {
-        if (querySnapshot.empty) {
-            db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').add({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                image: item.image,
-            })
-        } else {
-            querySnapshot.forEach((doc) => {
-                db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').doc(doc.id).delete();
-            })
-        }
-    })
 }
 
 const styles = StyleSheet.create({

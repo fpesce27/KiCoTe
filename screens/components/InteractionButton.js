@@ -8,7 +8,7 @@ const InteractionButton = (props) => {
 
     return (
         <View style={styles.inputContainer}>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: props.background ? props.background : theme.colors.accent }} onPress={props.onPress}>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: props.background ? props.background : theme.colors.accent }} onPress={props.onPress} disabled={props.disabled}>
                 <Text style={{ ...styles.buttonText, fontFamily: theme.fonts.regular, color: props.color ? props.color : theme.colors.primary }}>{props.icon}{props.text}</Text>
             </TouchableOpacity>
         </View>

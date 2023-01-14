@@ -397,3 +397,5 @@ export const orders = [
         id: 'eioue2893eu293cvbcvbcvbcvb8r2or',
     },
 ]
+
+export const breaks = ['1° Recreo (Mañana)', '2° Recreo (Manaña)', 'Almuerzo' , '1° Recreo (Tarde)', '2° Recreo (Tarde)']

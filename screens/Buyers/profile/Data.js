@@ -1,16 +1,19 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
 import { auth } from '../../../db/firebase'
+import { useTheme } from 'react-native-paper'
 
 const Data = () => {
+    const theme = useTheme()
+
     return (
         <>
             <View style={styles.profileImage}>
                 <Image source={{ uri: auth.currentUser.photoURL }} style={styles.image} />
             </View>
             <View style={styles.profileDetails}>
-                <Text style={styles.name}>{auth.currentUser.displayName}</Text>
-                <Text style={styles.email}>{auth.currentUser.email}</Text>
+                <Text style={{ fontSize:20, color:theme.colors.secondary }}>{auth.currentUser.displayName}</Text>
+                <Text style={{...styles.email, color:theme.colors.secondary}}>{auth.currentUser.email}</Text>
             </View>
         </>
     )
@@ -35,13 +38,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    name: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
     email: {
         fontSize: 16,
-        color: 'gray',
         paddingTop: 5,
+        opacity: 0.5,
     },
 })

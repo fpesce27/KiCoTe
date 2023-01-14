@@ -6,17 +6,19 @@ import { auth, db } from '../../db/firebase'
 import InteractionButton from '../components/InteractionButton'
 import { useTheme } from 'react-native-paper'
 import { BackButton } from '../components/Controls'
+import Background from '../components/Background'
 
-const StartingPage = (props) => {
+const StartingPage = ({route}) => {
 
     const navigation = useNavigation()
     const theme = useTheme()
     
     const handleRole = (role) => {
-        navigation.navigate('ChooseSchool', { role: role })
+        navigation.navigate('Register', { role: role, schoolId: route.params.schoolId })
     }
 
     return (
+        <Background>
         <SafeAreaView
             style={{
                 display: 'flex',
@@ -25,16 +27,17 @@ const StartingPage = (props) => {
             }}
         >   
             <View style={{flex:1}}><BackButton /></View>
-            <View style={{flex:3}}>
+            <View style={{flex:2}}>
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>Vamos a Comenzar</Text>
-                    <Text style={styles.subtitle}>¿Qué vas a hacer en la app?</Text>
+                    <Text style={{...styles.titleText, color:theme.colors.secondary}}>Vamos a Comenzar</Text>
+                    <Text style={{...styles.subtitle, color:theme.colors.secondary}}>¿Qué vas a hacer en la app?</Text>
                 </View>
 
-                <InteractionButton text="Comprar" onPress={() => handleRole('Buyers')} />
-                <InteractionButton text="Vender" background={theme.colors.primary} color={theme.colors.accent} onPress={() => handleRole('Sellers')} /> 
+                <InteractionButton text="Comprar" onPress={() => handleRole('buyers')} />
+                <InteractionButton text="Vender" background={theme.colors.primary} color={theme.colors.accent} onPress={() => handleRole('sellers')} /> 
             </View>
         </SafeAreaView>
+        </Background>
     )
 }
 

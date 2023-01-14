@@ -20,15 +20,17 @@ import { HomeIcon, ShoppingCartIcon, HeartIcon, UserIcon, ReceiptPercentIcon, Sh
 import StartingPage from './screens/auth/StartingPage';
 import Orders from './screens/Sellers/Orders/Orders';
 import Items from './screens/Sellers/Items/Items';
-import Configuration from './screens/Sellers/Configuration/Configuration';
 import OrderScreen from './screens/Sellers/Orders/OrderScreen';
 import * as Font from 'expo-font';
 import WelcomeScreen from './screens/auth/WelcomeScreen';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
 import Loading from './screens/Loading';
 import { setCustomText } from 'react-native-global-props';
 import ChooseSchool from './screens/auth/ChooseSchool';
 import AddSchool from './screens/auth/AddSchool';
+import ManageItemScreen from './screens/Sellers/Items/ManageItemScreen';
+import SchoolAdjustments from './screens/Buyers/profile/options/SchoolAdjustments';
+import * as Notifications from 'expo-notifications';
 
 const customTextProps = { 
   style: { 
@@ -58,20 +60,22 @@ export default function App() {
     setCustomText(customTextProps);
   }, []);
 
-  const getRole = async () => {
-    db.collection('Schools').onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        db.collection('Schools').doc(doc.id).collection('Users').onSnapshot((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            if (doc.id === auth.currentUser.uid) {
-              setUserRole(doc.data().role);
-            }
-          })
-        })
-        if (userRole !== null) {
-          setSchoolId(doc.id);
-        }
-      });
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
+
+  const getRole = () => {
+    db.collection('users').doc(auth.currentUser.uid).get().then((doc) => {
+      if (doc.exists) {
+        setUserRole(doc.data().role);
+        setSchoolId(doc.data().schoolId);
+      }
     })
   }
 
@@ -79,26 +83,25 @@ export default function App() {
     if (user) {
       setIsAuthenticated(true);
       getRole();
+      
     } else {
       setIsAuthenticated(false);
       setUserRole(null);
     }
   });
 
-
   const theme = {
     colors: {
-      primary: '#fff',
-      secondary: '#E2E3E7',
-      accent: '#896AF5',
+      primary: '#EECEB7',
+      secondary: '#fff',
+      accent: '#78534F',
+      accent2: '#6A4541',
+      white: '#fef9ff',
     },
     fonts: {
       regular: 'Circular Std',
       welcomeScreen: 'Inter'
     },
-    data:{
-      schoolId: schoolId
-    }
   };
 
   return (
@@ -119,7 +122,7 @@ export default function App() {
               </>
             ) : isAuthenticated && !!userRole ? (
               <>
-                {userRole === 'Buyers' ? (
+                {userRole === 'buyers' ? (
                   <>
                     <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
                     <Stack.Screen name="Item" component={Item} options={{ headerShown: false }} />
@@ -128,10 +131,14 @@ export default function App() {
                     <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
                   </>
                 )
-                  : userRole === 'Sellers' ? (
+                  : userRole === 'sellers' ? (
                     <>
                       <Stack.Screen name="SellerTabs" component={SellerTabs} options={{ headerShown: false }} />
                       <Stack.Screen name="OrderScreen" component={OrderScreen} options={{ headerShown: false }} />
+                      <Stack.Screen name="ManageItemScreen" component={ManageItemScreen} options={{ headerShown: false }} />
+                      <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }} />
+                      <Stack.Screen name="OrdersHistory" component={OrdersHistory} options={{ headerShown: false }} />
+                      <Stack.Screen name="SchoolAdjustments" component={SchoolAdjustments} options={{ headerShown: false }} />
                     </>
                   ) : null}
 
@@ -258,12 +265,6 @@ function SellerTabs() {
         <View style={styles.tabIcon}>
           <ReceiptPercentIcon name="shopping-cart" color={color} size={size} />
           <Text style={{ color: color, fontSize: 12 }}>Items</Text>
-        </View>
-      ) }} />
-      <Tab.Screen name="Configuration" component={Configuration} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (
-        <View style={styles.tabIcon}>
-          <Cog8ToothIcon name="heart" color={color} size={size} />
-          <Text style={{ color: color, fontSize: 12 }}>Configuration</Text>
         </View>
       ) }} />
       <Tab.Screen name="Profiile" component={Profile} options={{ headerShown: false, tabBarIcon: ({ color, size }) => (

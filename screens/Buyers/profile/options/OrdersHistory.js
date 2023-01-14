@@ -1,38 +1,41 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native'
 import React from 'react'
 import { db, auth } from '../../../../db/firebase'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { BackButton } from '../../../components/Controls'
 import Order from './Order'
+import { useTheme } from 'react-native-paper'
+import Background from '../../../components/Background'
 
 const OrdersHistory = () => {
     
     const [orders, setOrders] = React.useState([])
+    const theme = useTheme()
 
     React.useEffect(() => {
-        const unsubscribe = db.collection('users').doc(auth.currentUser.uid).collection('orders').orderBy('date', 'desc').onSnapshot((snapshot) => {
-            setOrders(snapshot.docs.map((doc) => ({
+        db.collection('users').doc(auth.currentUser.uid).collection('orders').orderBy('date', 'desc').onSnapshot((snapshot) => {
+            setOrders(snapshot.docs.map(doc => ({
                 id: doc.id,
                 order: doc.data()
             })))
         })
-        return unsubscribe;
     }, [])
 
     return (
+        <Background>
     <SafeAreaView>
         <BackButton/>
         <View style={styles.titleContainer}>
-            <Text style={styles.title}>Orders History</Text>
+            <Text style={styles.title}>Historial de Pedidos</Text>
         </View>
-        <View style={styles.scroll}>
-            <ScrollView >
-                {orders.map(({id, order}) => (
-                    <Order key={id} id={id} order={order}/>
-                ))}
-            </ScrollView>
-        </View>
+        <FlatList
+            data={orders}
+            renderItem={({item}) => <Order id={item.id} order={item.order}/>}
+            keyExtractor={item => item.id}
+            contentContainerStyle={{paddingBottom: 300}}
+        />
     </SafeAreaView>
+    </Background>
   )
 }
 
@@ -47,12 +50,7 @@ const styles = StyleSheet.create({
         margin: 15,
     },
     title: {
-        fontSize: 40,
+        fontSize: 35,
         fontWeight: 'bold',
-    },
-    scroll: {
-        height: '100%',
-        paddingBottom: 400,
-    },
-    
+    }, 
 })

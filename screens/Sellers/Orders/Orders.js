@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Order from './Order'
 import { db, auth } from '../../../db/firebase'
 import { useTheme } from 'react-native-paper'
+import Background from '../../components/Background'
 
 const Orders = () => {
 
@@ -12,26 +13,25 @@ const Orders = () => {
     const [orders, setOrders] = React.useState([])
 
     React.useEffect(() => {
-        db.collection('Schools').doc(theme.data.schoolId).collection('Users').get().then((snapshot) => {
-            snapshot.docs.forEach(doc => {
-                db.collection('Schools').doc(theme.data.schoolId).collection('Users').doc(doc.id).collection('Orders').onSnapshot((snapshot) => {
-                    setOrders(snapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        order: doc.data()
-                    })))
-                })
+        db.collection('users').doc(auth.currentUser.uid).get().then((doc) => {
+            db.collection('activeOrders').where('schoolId', '==', doc.data().schoolId).onSnapshot((snapshot) => {
+                setOrders(snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    order: doc.data()
+                })))
             })
         })
     }, [])
 
   return (
+    <Background>
     <SafeAreaView>
         <View style={styles.container}>
-            <Text style={styles.text}>Orders</Text>
+            <Text style={{...styles.text, color: theme.colors.secondary}}>Orders</Text>
         </View>
         <FlatList
             data={orders}
-            renderItem={({ item }) => item.order.status === 'Pending' && (
+            renderItem={({ item }) => (
                 <Order order={item} />
             )}
             keyExtractor={item => item.id}
@@ -39,6 +39,7 @@ const Orders = () => {
             style={{ padding:20 }}
         />
     </SafeAreaView>
+    </Background>
   )
 }
 

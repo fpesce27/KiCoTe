@@ -8,16 +8,18 @@ import { Input } from '@rneui/base'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { nameValidator } from '../../../auth/validators/username'
 import InteractionButton from '../../../components/InteractionButton'
+import Background from '../../../components/Background'
+import { useTheme } from 'react-native-paper'
 
 const ProfileScreen = () => {
 
   const [image, setImage] = React.useState(null)
   const [username, setUsername] = React.useState(null)
-  const [email, setEmail] = React.useState(null)
   const [password, setPassword] = React.useState(null)
   const [confirmPassword, setConfirmPassword] = React.useState(null)
   const [selectChangeUsername, setSelectChangeUsername] = React.useState(false)
   const [selectChangePassword, setSelectChangePassword] = React.useState(false)
+  const theme = useTheme()
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,6 +65,7 @@ const ProfileScreen = () => {
   }
 
   return (
+    <Background>
     <SafeAreaView>
       <KeyboardAvoidingView behavior="position">
         <BackButton />
@@ -70,8 +73,8 @@ const ProfileScreen = () => {
 
           <Image source={{ uri: image || auth.currentUser.photoURL }} style={styles.profileImage} />
 
-          <Text style={styles.name}>{auth.currentUser.displayName}</Text>
-          <Text style={styles.email}>{auth.currentUser.email}</Text>
+          <Text style={{...styles.name, color:theme.colors.secondary}}>{auth.currentUser.displayName}</Text>
+          <Text style={{...styles.email, color:theme.colors.secondary}}>{auth.currentUser.email}</Text>
 
           <View style={{ width:'100%', margin:15 }} >
 
@@ -98,8 +101,13 @@ const ProfileScreen = () => {
                   onChangeText={setUsername}
                   value={username}
                   label="Nombre De Usuario"
-                  labelStyle={{ color: 'black' }}
+                  labelStyle={{ color: theme.colors.secondary }}
                   style={styles.input}
+                  inputContainerStyle={{borderBottomColor: theme.colors.secondary}}
+                  placeholderTextColor={theme.colors.secondary}
+                  cursorColor={theme.colors.secondary}
+                  selectionColor={theme.colors.secondary}
+                  inputStyle={{color: theme.colors.secondary}}
                 />
 
                 <InteractionButton text="Actualizar Nombre De Usuario" onPress={updateUsername} />
@@ -114,8 +122,13 @@ const ProfileScreen = () => {
                   value={password}
                   secureTextEntry
                   label="Contraseña"
-                  labelStyle={{ color: 'black' }}
+                  labelStyle={{ color: theme.colors.secondary }}
                   style={styles.input}
+                  inputContainerStyle={{borderBottomColor: theme.colors.secondary}}
+                  placeholderTextColor={theme.colors.secondary}
+                  cursorColor={theme.colors.secondary}
+                  selectionColor={theme.colors.secondary}
+                  inputStyle={{color: theme.colors.secondary}}
                 />
 
                 <Input
@@ -124,8 +137,13 @@ const ProfileScreen = () => {
                   value={confirmPassword}
                   secureTextEntry
                   label="Confirmar Contraseña"
-                  labelStyle={{ color: 'black' }}
+                  labelStyle={{ color: theme.colors.secondary }}
                   style={styles.input}
+                  inputContainerStyle={{borderBottomColor: theme.colors.secondary}}
+                  placeholderTextColor={theme.colors.secondary}
+                  cursorColor={theme.colors.secondary}
+                  selectionColor={theme.colors.secondary}
+                  inputStyle={{color: theme.colors.secondary}}
                 />
 
                 <InteractionButton text="Actualizar Contraseña" onPress={updatePassword} />
@@ -137,6 +155,7 @@ const ProfileScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </Background>
   )
 }
 
@@ -161,11 +180,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingTop: 20,
-  },
-  email: {
-    fontSize: 16,
-    color: 'gray',
-    paddingTop: 5,
   },
   button: {
     backgroundColor: '#007AFF',

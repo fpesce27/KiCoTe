@@ -5,24 +5,26 @@ import { useState } from 'react'
 import { db, auth } from '../../../db/firebase';
 import Item from '../../components/Item';
 import { HeartButton } from '../../components/Controls';
+import { useTheme } from 'react-native-paper';
+import Background from '../../components/Background';
 
 const Favourites = () => {
 
     const [favourites, setFavourites] = useState([]);
     const [padding, setPadding] = useState(0);
+    const theme = useTheme();
 
     React.useEffect(() => {
-        const unsubscribe = db.collection('Users').doc(auth.currentUser.uid).collection('Favourites').onSnapshot((snapshot) => {
-            setFavourites(snapshot.docs.map((doc) => ({
+        db.collection('users').doc(auth.currentUser.uid).collection('favourites').onSnapshot((snapshot) => {
+            setFavourites(snapshot.docs.map(doc => ({
                 id: doc.id,
                 item: doc.data()
             })))
         })
-
-        return unsubscribe;
     }, [])
 
     return (
+        <Background>
         <SafeAreaView>
 
             <View style={styles.title}>
@@ -55,6 +57,7 @@ const Favourites = () => {
 
             }
         </SafeAreaView>
+        </Background>
     )
 }
 

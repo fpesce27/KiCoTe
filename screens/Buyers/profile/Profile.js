@@ -5,18 +5,21 @@ import Options from './Options'
 import Data from './Data'
 import Logout from './Logout'
 import InteractionButton from '../../components/InteractionButton'
+import Background from '../../components/Background'
 
 const Profile = () => {
   return (
-    <SafeAreaView>
-        <View style={styles.profile}>
-            <Data />
-        </View>
-        <View style={styles.profileOptions}>
-            <Options />
-            <Logout />
-        </View>
-    </SafeAreaView>
+    <Background>
+        <SafeAreaView>
+            <View style={styles.profile}>
+                <Data />
+            </View>
+            <View style={styles.profileOptions}>
+                <Options />
+                <Logout />
+            </View>
+        </SafeAreaView>
+    </Background>
   )
 }
 

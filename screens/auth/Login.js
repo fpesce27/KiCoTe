@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
@@ -8,6 +8,7 @@ import { useTheme, TextInput } from 'react-native-paper'
 import { BackButton } from '../components/Controls'
 import InteractionButton from '../components/InteractionButton'
 import { EnvelopeIcon } from 'react-native-heroicons/outline'
+import Background from '../components/Background'
 
 const Login = () => {
   
@@ -21,19 +22,20 @@ const Login = () => {
   }
 
   return (
+    <Background>
     <SafeAreaView>
       <KeyboardAvoidingView
         behavior="padding"
         style={{
           display: 'flex',
           justifyContent: 'center',
-          height: '95%',
+          height: '90%',
         }}>
           <BackButton />
         <StatusBar style="auto" />
         <View style={styles.titleContainer}>
-          <Text style={{...styles.title, fontFamily:theme.fonts.regular}}>Iniciar Sesión</Text>
-          <Text style={{...styles.subtitle, fontFamily:theme.fonts.regular}}>Ingresa tus datos para iniciar sesión</Text>
+          <Text style={{...styles.title, color:theme.colors.secondary}}>Iniciar Sesión</Text>
+          <Text style={{...styles.subtitle, color:theme.colors.secondary}}>Ingresa tus datos para iniciar sesión</Text>
         </View>
         
         <View style={styles.inputContainer}>
@@ -57,16 +59,18 @@ const Login = () => {
         
         <View style={styles.forgotPasswordContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={{fontFamily:theme.fonts.regular}}>¿Olvidaste la contraseña?</Text>
+            <Text style={{color:theme.colors.accent}}>¿Olvidaste la contraseña?</Text>
           </TouchableOpacity>
         </View>
 
         <InteractionButton text="Iniciar Sesión" onPress={onLoginPressed} />
 
-        <InteractionButton text="Crear Cuenta" onPress={() => navigation.navigate('StartingPage')} background={theme.colors.primary} color={theme.colors.accent} />
+        <InteractionButton text="Crear Cuenta" onPress={() => navigation.navigate('ChooseSchool')} background={theme.colors.primary} color={theme.colors.accent} />
 
       </KeyboardAvoidingView>
+      
     </SafeAreaView>
+    </Background>
   )
 }
 

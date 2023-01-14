@@ -7,6 +7,7 @@ import { db, auth, firestore } from '../../db/firebase'
 import { useTheme, TextInput } from 'react-native-paper'
 import { BackButton } from '../components/Controls'
 import InteractionButton from '../components/InteractionButton'
+import Background from '../components/Background'
 
 const Register = ({ route }) => {
 
@@ -14,34 +15,53 @@ const Register = ({ route }) => {
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
     const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' })
-    const role = route.params.role
-    const school = route.params.school
     const theme = useTheme()
+    const schoolId = route.params.schoolId
+    const role = route.params.role
 
     const onSignUpPressed = () => {
         if (password.value !== confirmPassword.value){
             return alert("Las contraseñas no coinciden")
         }
         else{
+            
             auth.createUserWithEmailAndPassword(email.value, password.value)
                 .then((authUser) => {
                     authUser.user.updateProfile({
                         displayName: username.value,
-                        photoUrl: require('../../assets/icon.png')
-                    })
-                    db.collection('Schools').doc(school).collection('Users').doc(authUser.user.uid).set({
-                        username: username.value,
-                        email: email.value,
                         photoUrl: require('../../assets/icon.png'),
-                        createdAt: new Date(),
-                        role: role
                     })
+                    
+                    const userRef = db.collection('users').doc(authUser.user.uid);
+                    const schoolRef = db.collection('schools').doc(schoolId);
+
+                    if(role === "sellers"){
+                        schoolRef.collection("sellers").doc(authUser.user.uid).set({
+                            userId: authUser.user.uid,
+                            role: role,
+                        });
+                    }else{
+                        schoolRef.collection("buyers").doc(authUser.user.uid).set({
+                            userId: authUser.user.uid,
+                            role: role,
+                        });
+                    }
+
+                    userRef.set({
+                        name:username.value,
+                        email:email.value,
+                        image: require('../../assets/icon.png'),
+                        schoolId: schoolId,
+                        role: role
+                    });
+
                 })
-                .catch((error) => alert(error.message))
+                .catch((error) => console.log(error.message))
         }
     }
 
     return (
+        <Background>
         <SafeAreaView>
             <KeyboardAvoidingView
                 behavior="padding"
@@ -51,13 +71,11 @@ const Register = ({ route }) => {
                     height: '95%',
                 }}>
                 <StatusBar style="auto" />
-                <View style={{marginBottom:-50}}>
-                    <BackButton />
-                </View>
+                <BackButton />
 
                 <View style={styles.titleContainer}>
-                    <Text style={{ ...styles.title, fontFamily: theme.fonts.regular }}>Crea Tu Cuenta</Text>
-                    <Text style={{ ...styles.subtitle, fontFamily: theme.fonts.regular }}>Ingresa tus datos para crear tu cuenta</Text>
+                    <Text style={{ ...styles.title, color:theme.colors.secondary }}>Crea Tu Cuenta</Text>
+                    <Text style={{ ...styles.subtitle, color:theme.colors.secondary }}>Ingresa tus datos para crear tu cuenta</Text>
                 </View>
 
                 <View style={styles.inputContainer}>
@@ -102,9 +120,9 @@ const Register = ({ route }) => {
                 </View>
 
                 <View style={styles.terms}>
-                    <Text style={{ fontFamily: theme.fonts.regular, fontSize: 14 }}>Al registrarte, aceptas nuestros</Text>
+                    <Text style={{ color:theme.colors.secondary, fontSize: 14 }}>Al registrarte, aceptas nuestros</Text>
                     <TouchableOpacity>
-                        <Text style={{ fontFamily: theme.fonts.regular, fontSize: 14, color: theme.colors.accent }}> Términos y condiciones</Text>
+                        <Text style={{ color:theme.colors.secondary, fontSize: 14, color: theme.colors.accent }}> Términos y condiciones</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -112,6 +130,7 @@ const Register = ({ route }) => {
 
             </KeyboardAvoidingView>
         </SafeAreaView>
+        </Background>
     )
 }
 
