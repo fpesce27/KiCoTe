@@ -1,12 +1,22 @@
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { useTheme } from 'react-native-paper'
+import { BlurView } from 'expo-blur';
 
 const Background = (props) => {
+
+  const theme = useTheme()
+
   return (
-    <ImageBackground source={require('../../assets/background.png')} style={{height:'100%'}}>
+
+    <View style={{ backgroundColor: theme.colors.background, flex:1 }}>
       {props.children}
-    </ImageBackground>
+    </View>
+
   )
 }
 
 export default Background
+
+const styles = StyleSheet.create({
+})

@@ -18,16 +18,14 @@ const FilterCategories = (props) => {
     }
 
     return (
-        <TouchableOpacity onPress={setCategory} style={[styles.container, { backgroundColor: props.filters[1].categories.includes(props.category) ? theme.colors.accent : '#fff' }]}>
+        <TouchableOpacity onPress={setCategory} style={[styles.container, { backgroundColor: props.filters[1].categories.includes(props.category) ? theme.colors.accent : theme.colors.item }]}>
             <View>
                 <Image
                     style={styles.image}
                     source={require('../../../assets/icon.png')}
                 />
             </View>
-            <View style={styles.textContainer}>
-                <Text style={styles.text}>{props.category}</Text>
-            </View>
+            <Text style={{...styles.text, color:theme.colors.text}}>{props.category}</Text>
         </TouchableOpacity>
     )
 }
@@ -40,12 +38,19 @@ const styles = StyleSheet.create({
     container: {
         margin: 10,
         padding: 10,
-        borderRadius: 10,
+        borderRadius: 30,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: '#ddd',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        
     },
     image: {
         width: 50,

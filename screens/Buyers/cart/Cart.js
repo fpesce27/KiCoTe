@@ -7,7 +7,6 @@ import Item from './Item';
 import InteractionButton from '../../components/InteractionButton';
 import { List, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-//import { breaks } from '../../constants';
 import Background from '../../components/Background';
 
 
@@ -74,7 +73,7 @@ function Cart() {
     <SafeAreaView>
 
       <View style={styles.title}>
-        <Text style={styles.titleText}>Tu Orden</Text>
+        <Text style={{...styles.titleText, color:theme.colors.text}}>Tu Orden</Text>
       </View>
 
       <View style={{...styles.inputContainer, backgroundColor:theme.colors.white}}>

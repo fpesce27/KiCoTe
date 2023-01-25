@@ -29,19 +29,19 @@ const Body = (props) => {
 
     return (
         <SafeAreaView>
-            <View style={{ paddingBottom:300 }}>
-            <FlatList
-                data={categories.filter(category => filters[1].categories.length === 0 || filters[1].categories.includes(category))}
-                renderItem={({ item, index }) => 
-                    <View style={{padding:20}}>
-                        <Category category={item} key={index} props={props} filters={filters} items={items}/>
-                    </View>
-                }
-                keyExtractor={(item, index) => index}
-                showsVerticalScrollIndicator={false}
-                onContentSizeChange={(width, height) => setContentHeight(height)}
-                contentContainerStyle={{ paddingBottom: contentHeight / categories.length }}
-            />
+            <View style={{paddingBottom:300}}>
+                <FlatList
+                    data={categories.filter(category => filters[1].categories.length === 0 || filters[1].categories.includes(category))}
+                    renderItem={({ item, index }) => 
+                        <View style={{padding:20}}>
+                            <Category category={item} key={index} props={props} filters={filters} items={items}/>
+                        </View>
+                    }
+                    keyExtractor={(item, index) => index}
+                    showsVerticalScrollIndicator={false}
+                    onContentSizeChange={(width, height) => setContentHeight(height)}
+                    contentContainerStyle={{ paddingBottom: contentHeight / categories.length }}
+                />
             </View>
             <BottomSheetFilter bottomSheetFilter={props.bottomSheetFilter} filters={filters} setFilters={setFilters} />
         </SafeAreaView>
@@ -51,6 +51,7 @@ const Body = (props) => {
 const Category = (props) => {
 
     const {items} = props
+    const theme = useTheme()
 
     const filter = (item, category) => {
         return item.name.toLowerCase().includes(props.props.searchPhrase.toLowerCase()) && item.categories.includes(category) && item.price >= props.filters[0].minPrice && item.price <= props.filters[0].maxPrice
@@ -59,11 +60,11 @@ const Category = (props) => {
     return (
         <View style={{ marginBottom: 20 }} key={props.index}>
 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>{props.category}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, color:theme.colors.text }}>{props.category}</Text>
             <FlatList
                 data={items.filter(item => filter(item, props.category))}
                 renderItem={({ item }) =>
-                    <View style={styles.item} key={item.id}>
+                    <View style={{...styles.item}} key={item.id}>
                         <Item item={item} />
                     </View>
                 }
@@ -82,8 +83,5 @@ const styles = StyleSheet.create({
     item: {
         borderRadius: 50,
         marginRight: 15,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        height: 225,
     },
 })

@@ -29,13 +29,14 @@ const Login = () => {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          height: '90%',
+          height: '100%',
         }}>
-          <BackButton />
         <StatusBar style="auto" />
+        <BackButton />
+        <View style={{flex:1}}>
         <View style={styles.titleContainer}>
-          <Text style={{...styles.title, color:theme.colors.secondary}}>Iniciar Sesión</Text>
-          <Text style={{...styles.subtitle, color:theme.colors.secondary}}>Ingresa tus datos para iniciar sesión</Text>
+          <Text style={{...styles.title, color:theme.colors.text}}>Iniciar Sesión</Text>
+          <Text style={{...styles.subtitle, color:theme.colors.subtext}}>Ingresa tus datos para iniciar sesión</Text>
         </View>
         
         <View style={styles.inputContainer}>
@@ -66,7 +67,8 @@ const Login = () => {
         <InteractionButton text="Iniciar Sesión" onPress={onLoginPressed} />
 
         <InteractionButton text="Crear Cuenta" onPress={() => navigation.navigate('ChooseSchool')} background={theme.colors.primary} color={theme.colors.accent} />
-
+        
+        </View>
       </KeyboardAvoidingView>
       
     </SafeAreaView>

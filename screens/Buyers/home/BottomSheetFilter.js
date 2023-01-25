@@ -31,14 +31,15 @@ const BottomSheetFilter = (props) => {
         backdropComponent={BottomSheetBackdrop}
         index={1}
         snapPoints={['95%', '95%']}
+        backgroundStyle={{ backgroundColor: theme.colors.background }}
     >
         <BottomSheetView style={styles.filterContainer}>
 
             <View style={styles.headerContainer}>
                 <TouchableOpacity onPress={clearFilters}>
-                    <Text style={styles.clearText}>Limpiar</Text>
+                    <Text style={{...styles.clearText, color:theme.colors.text}}>Limpiar</Text>
                 </TouchableOpacity>
-                <Text style={styles.filterTitle}>Filtros</Text>
+                <Text style={{...styles.filterTitle, color:theme.colors.text}}>Filtros</Text>
                 <TouchableOpacity style={styles.exitButton} onPress={() => props.bottomSheetFilter.current?.dismiss()}>
                     <Text style={{fontWeight:'bold'}}>X</Text>
                 </TouchableOpacity>
@@ -46,8 +47,8 @@ const BottomSheetFilter = (props) => {
 
             <View style={styles.priceContainer}>
                 <View style={styles.priceRangeContainer}>
-                    <Text style={styles.priceTitle}>Precio</Text>
-                    <Text style={styles.priceRangeText}>${props.filters[0].minPrice} - ${props.filters[0].maxPrice}</Text>
+                    <Text style={{...styles.priceTitle, color:theme.colors.text}}>Precio</Text>
+                    <Text style={{...styles.priceRangeText, color:theme.colors.text}}>${props.filters[0].minPrice} - ${props.filters[0].maxPrice}</Text>
                 </View>
                 <View style={{marginTop:-30}}>
                     <MultiSlider
@@ -93,7 +94,7 @@ const BottomSheetFilter = (props) => {
 
             <View style={styles.priceContainer}>
                 <View style={styles.priceRangeContainer}>
-                    <Text style={styles.priceTitle}>Categoría</Text>
+                    <Text style={{...styles.priceTitle, color:theme.colors.text}}>Categoría</Text>
                 </View>
                 <FlatList
                     data={categories}
@@ -119,7 +120,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-
     },
     headerContainer: {
         display: 'flex',

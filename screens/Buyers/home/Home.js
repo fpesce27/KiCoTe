@@ -1,4 +1,4 @@
-import { SafeAreaView } from 'react-native'
+import { KeyboardAvoidingView, SafeAreaView, View } from 'react-native'
 import React from 'react'
 import Header from './Header';
 import Body from './Body';
@@ -12,7 +12,8 @@ import { db, auth } from '../../../db/firebase';
 const Home = () => {
 
     const [searchPhrase, setSearchPhrase] = React.useState('');
-    const [bottomSheetFilter, setBottomSheetFilter] = React.useState(React.useRef(null)) 
+    const [bottomSheetFilter, setBottomSheetFilter] = React.useState(React.useRef(null))
+    const theme = useTheme() 
     
     React.useEffect(() => {
         (async () => {
@@ -36,11 +37,12 @@ const Home = () => {
     return (
         <BottomSheetModalProvider>
             <Background>
-            <SafeAreaView style={{marginTop:25}}>
-                <StatusBar style="auto" />
+            <View>
+                
                 <Header searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} bottomSheetFilter={bottomSheetFilter}/>
                 <Body searchPhrase={searchPhrase} bottomSheetFilter={bottomSheetFilter}/>
-            </SafeAreaView>
+                
+            </View>
             </Background>
         </BottomSheetModalProvider>
     )

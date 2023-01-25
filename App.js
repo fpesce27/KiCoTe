@@ -93,10 +93,17 @@ export default function App() {
   const theme = {
     colors: {
       primary: '#EECEB7',
-      secondary: '#fff',
-      accent: '#78534F',
-      accent2: '#6A4541',
-      white: '#fef9ff',
+      secondary: '#252830',
+      accent: '#FF7269',
+      background: 'rgba(255, 255, 255, 1)',
+      item:'rgba(255, 114, 105, 0.8)',
+      text: '#000',
+      subtext: '#8E94A4',
+      button: '#B22222',
+      other: '#FFFF66',
+      welcome: '#4CAF50',
+      activeIcons: '#2E7D32',
+      tabBar: 'rgba(255, 255, 255, 0.96)'
     },
     fonts: {
       regular: 'Circular Std',
@@ -165,7 +172,8 @@ function HomeTabs() {
         {
           margin: 10,
           elevation: 0,
-          backgroundColor: '#ffffff',
+          backgroundColor: theme.colors.tabBar,
+          borderTopWidth: 0,
           borderRadius: 30,
           height: 60,
           ...styles.shadow
@@ -177,7 +185,8 @@ function HomeTabs() {
           left: 20,
           right: 20,
           elevation: 0,
-          backgroundColor: '#ffffff',
+          backgroundColor: theme.colors.tabBar,
+          borderTopWidth: 0,
           borderRadius: 30,
           height: 90,
           ...styles.shadow
@@ -210,7 +219,7 @@ function HomeTabs() {
           </View>
         )
       }} />
-      <Tab.Screen name="Profiile" component={Profile} options={{
+      <Tab.Screen name="Profile" component={Profile} options={{
         headerShown: false, tabBarIcon: ({ color, size }) => (
           <View style={styles.tabIcon}>
             <UserIcon name="user" color={color} size={size} />
@@ -278,6 +287,12 @@ function SellerTabs() {
 }
 
 const styles = StyleSheet.create({
+  
+  tabIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: Platform.OS === 'android' ? 0 : 15
+  },
   shadow: {
     shadowColor: '#7F5DF0',
     shadowOffset: {
@@ -287,10 +302,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
-  },
-  tabIcon: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: Platform.OS === 'android' ? 0 : 15
   }
 });

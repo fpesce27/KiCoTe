@@ -70,11 +70,13 @@
     "react-native-text-input-mask": "^3.1.4",
     "react-native-time-picker-simple": "^1.0.4",
     "react-native-web": "~0.18.9",
+    "react-native-webview": "^11.26.0",
     "read-excel-file": "^5.5.3",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "rn-range-slider": "^2.2.2",
     "tailwindcss-react-native": "^1.7.10",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "expo-blur": "~12.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

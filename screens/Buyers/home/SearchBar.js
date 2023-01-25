@@ -9,14 +9,17 @@ export const SearchBar = (props) => {
   const theme = useTheme()
 
     return (
-    <View style={styles.searchBar}>
+    <View style={{...styles.searchBar, backgroundColor:theme.colors.secondary}}>
         <MagnifyingGlassIcon style={{color : 'lightgray'}} />
         <TextInput
-            style={styles.searchInput}
+            style={{...styles.searchInput, color:theme.colors.text}}
             placeholder="Buscar..."
             placeholderTextColor="lightgray"
             value={props.searchPhrase}
             onChangeText={props.setSearchPhrase}
+            cursorColor={theme.colors.text}
+            selectionColor={theme.colors.text}
+            
         />
       </View>
   )
@@ -29,17 +32,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#fff',
         padding: 10,
         margin: 0,
-        borderRadius: 50,
+        borderRadius: 24,
         marginBottom: 20,
         width: '80%',
-        height: 50,
+        height: 65,
       },
       searchInput: {
         flex: 1,
         marginLeft: 10,
-        color: '#000',
       },
 })
